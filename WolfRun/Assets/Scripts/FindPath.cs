@@ -23,14 +23,20 @@ public class FindPath : MonoBehaviour
         closeList = new List<MapNode>();
         initializePath(start, finish);
     }
-
+    //테스트용 코드, 나중에 지울꺼
+    public void PushButton()
+    {
+        initializePath(start, finish);
+    }
     void Update()
     {
         
     }
     void initializePath(MapNode startNode, MapNode finishNode)
     {
-        
+        openList.Clear();
+        closeList.Clear();
+
         openList.AddRange(getNeighbor(startNode));
         closeList.Add(startNode);
         foreach (MapNode node in openList)
@@ -49,7 +55,10 @@ public class FindPath : MonoBehaviour
         //이후부터 비용 계산 및 경로 추가 작업 필요
         while(!closeList.Contains(finishNode))
         {
-            openList.AddRange(getNeighbor(closeList[closeList.Count-1]));
+            List<MapNode> _neighbors = getNeighbor(closeList[closeList.Count - 1]);
+            openList.AddRange(_neighbors);
+            if (openList.Count == 0)
+                return;
             foreach (MapNode node in openList)
             {
                 calculateCost(node, finishNode);
@@ -60,14 +69,19 @@ public class FindPath : MonoBehaviour
                 else if (A.Cost < B.Cost) return -1;
                 return 0;
             });
-            closeList.Add(openList[0]);
-            openList.Remove(openList[0]);
-            if(openList.Count == 0)
+            
+            for(int i = 0;i < openList.Count; i++)
             {
-                //길 없음
-                return;
+                if(_neighbors.Contains(openList[i]))
+                {
+                    Debug.Log("Add closeList");
+                    closeList.Add(openList[i]);
+                    openList.Remove(openList[i]);
+                    break;
+                }
             }
         }
+        path = new List<MapNode>(closeList);
     }
 
     void calculateCost(MapNode node, MapNode finishNode)
@@ -79,12 +93,14 @@ public class FindPath : MonoBehaviour
     int calculateHeuristic(MapNode node, MapNode finishNode)
     {
         //장애물을 고려하지 않고 node에서 목적지까지 가는데 드는 예상 비용(귀찮으니까 그냥 목적지 노드에서 노드까지 거리로 설정함)
-        return (int)Vector3.Distance(node.gameObject.transform.position, finishNode.gameObject.transform.position);
+        return (int)(Vector3.Distance(node.gameObject.transform.position, finishNode.gameObject.transform.position)*10);
     }
     int calculateMoveCost(MapNode node)
     {
         //부모노드에서 현재 노드로 이동하는데 드는 비용
-        return node.ParentNode.MoveCost + 1 + node.Weight;
+        int cost = node.ParentNode.MoveCost + 1 + node.Weight;
+        node.MoveCost = cost;
+        return cost;
     }
     List<MapNode> getNeighbor(MapNode start)
     {

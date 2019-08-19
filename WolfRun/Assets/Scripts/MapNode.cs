@@ -12,7 +12,7 @@ public class MapNode:MonoBehaviour
     //G값
     [SerializeField] private int moveCost;
 
-    private MapNode parentNode;
+    [SerializeField] private MapNode parentNode;
 
     void Start()
     {
