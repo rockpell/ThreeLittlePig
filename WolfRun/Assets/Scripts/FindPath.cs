@@ -56,6 +56,11 @@ public class FindPath : MonoBehaviour
         while(!closeList.Contains(finishNode))
         {
             List<MapNode> _neighbors = getNeighbor(closeList[closeList.Count - 1]);
+            if (_neighbors.Count == 0)
+            {
+                Debug.Log("no exit");
+                return;
+            }
             openList.AddRange(_neighbors);
             if (openList.Count == 0)
                 return;
@@ -80,6 +85,8 @@ public class FindPath : MonoBehaviour
                     break;
                 }
             }
+            //만약 막힌 공간이라 더이상 진행이 불가능할 경우 탈출코드가 필요함
+            //일단은 이웃이 없으면 막힌 공간으로 판정하도록 함
         }
         path = new List<MapNode>(closeList);
     }
@@ -218,10 +225,8 @@ public class FindPath : MonoBehaviour
         }
         for(int index = 0; index < _neighbor.Count; index++)
         {
-            Debug.Log(closeList.Contains(_neighbor[index]));
             if (closeList.Contains(_neighbor[index]))
             {
-                Debug.Log("closeList");
                 _neighbor.Remove(_neighbor[index]);
                 index--;
             }
