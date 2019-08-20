@@ -8,9 +8,6 @@ public class InputManager : MonoBehaviour
 
     private float wheelValue = 0;
 
-    private bool isRightButtonPressing = false;
-    private int rightButtonPrssingCount = 0;
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -25,8 +22,12 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 _mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
         nowPlayer.move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        nowPlayer.lookMouse(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        nowPlayer.lookMouse(_mouseWorldPosition);
+
+        nowPlayer.setNowLookTile(TileManager.Instance.lookForwardTile(nowPlayer.transform.position, _mouseWorldPosition));
 
         wheelValue = Input.GetAxisRaw("Mouse ScrollWheel");
 
@@ -35,33 +36,18 @@ public class InputManager : MonoBehaviour
             nowPlayer.constructionWall();
             nowPlayer.dressingUp();
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse1))
-        {
-            isRightButtonPressing = false;
-            if (rightButtonPrssingCount < 10)
-                nowPlayer.destroyWall();
-            rightButtonPrssingCount = 0;
-        }
         else if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            isRightButtonPressing = true;
+            nowPlayer.destroyWall();
+        }
+        else if (Input.GetKeyDown(KeyCode.F))
+        {
+            nowPlayer.fireWall();
         }
         else if(wheelValue != 0) // 밑으로 휠 -값 위로 휠 +값
         {
 
         }
 
-
-        if (isRightButtonPressing)
-        {
-            ++rightButtonPrssingCount;
-            if(rightButtonPrssingCount > 10)
-            {
-                isRightButtonPressing = false;
-                nowPlayer.fireWall();
-            }
-        }
-
-        //Debug.Log("rightButtonPrssingCount: " + rightButtonPrssingCount);
     }
 }

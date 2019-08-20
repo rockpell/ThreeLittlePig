@@ -9,6 +9,8 @@ public class Pig : MonoBehaviour
     private WallType nowConstructWallType = WallType.STRAW;
     private WallType nowSelectTileWallType = WallType.NONE; // 타일을 가져오는게 나을지도
 
+    private MapNode nowLookTile;
+
     private int fireResistance = 100;
     private float moveSpeed = 4.0f;
     private float[] constructionSpeed = new float[3]; // 짚, 나무, 벽돌
@@ -90,5 +92,10 @@ public class Pig : MonoBehaviour
     public void dressingUp() // 늑대한테 옷 입히기
     {
         Debug.Log("dressingUp");
+    }
+
+    public void setNowLookTile(MapNode tile)
+    {
+        nowLookTile = tile;
     }
 }
