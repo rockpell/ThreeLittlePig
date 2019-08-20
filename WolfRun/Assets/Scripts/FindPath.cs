@@ -5,28 +5,36 @@ using UnityEngine;
 public class FindPath : MonoBehaviour
 {
     [SerializeField] private List<MapList> mapLists;
-    [SerializeField] private MapNode start;
-    [SerializeField] private MapNode finish;
-
+    [SerializeField] private MapNode startNode;
+    public MapNode StartNode
+    {
+        get { return startNode; }
+        set { startNode = value; }
+    }
+    [SerializeField] private MapNode finishNode;
+    public MapNode FinishNode
+    {
+        get { return finishNode; }
+        set { finishNode = value; }
+    }
     [SerializeField] private List<MapNode> openList;
     [SerializeField] private List<MapNode> closeList;
     void Start()
     {
+        mapLists = TileManager.Instance.MapLists;
         openList = new List<MapNode>();
         closeList = new List<MapNode>();
-        mapLists = TileManager.Instance.MapLists;
     }
     //테스트용 코드, 나중에 지울꺼
     public void PushButton()
     {
-        initializePath(start, finish);
+        initializePath(startNode, finishNode);
         
     }
     void Update()
     {
-        Debug.Log(TileManager.Instance.lookForwardTile(start.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
     }
-    void initializePath(MapNode startNode, MapNode finishNode)
+    public void initializePath(MapNode startNode, MapNode finishNode)
     {
         openList.Clear();
         closeList.Clear();
@@ -125,6 +133,7 @@ public class FindPath : MonoBehaviour
         */
         Debug.Log("i: " + i + " j: " + j);
         List<MapNode> _neighbor = new List<MapNode>();
+        Debug.Log("MapList: " + mapLists[i]);
         if(i > 0)
         {
             if (i < mapLists.Count-1)

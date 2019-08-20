@@ -6,6 +6,10 @@ public class MapNode:MonoBehaviour
 {
     //해당 타일의 종류(지나갈 수 있는 타입인지 없는 타입인지, 비용은 얼마인지 책정)
     [SerializeField] private WallType wallState;
+    public WallType WallState
+    {
+        get { return wallState; }
+    }
     //지나가는데 필요한 비용(짚, 나무, 벽돌 순으로 비용이 높아짐)
     [SerializeField] private int weight;
     [SerializeField] private bool isPath;
@@ -34,6 +38,7 @@ public class MapNode:MonoBehaviour
         {
             case WallType.NONE:
                 isPath = true;
+                weight = 0;
                 break;
             case WallType.STRAW:
                 isPath = true;
@@ -49,12 +54,15 @@ public class MapNode:MonoBehaviour
                 break;
             case WallType.TREE:
                 isPath = false;
+                weight = 0;
                 break;
             case WallType.STONE:
                 isPath = false;
+                weight = 0;
                 break;
             case WallType.FIRE:
                 isPath = false;
+                weight = 0;
                 //burn함수 호출
                 break;
         }
@@ -74,11 +82,10 @@ public class MapNode:MonoBehaviour
     {
         get { return isPath; }
     }
-    //장애물 설치/제거 시 Weight값 변경 필요
+    //장애물 설치/제거 시 Weight값 변경 필요 - ChangeState에서 처리
     public int Weight
     {
         get { return weight; }
-        set { weight = value; }
     }
     public MapNode ParentNode
     {

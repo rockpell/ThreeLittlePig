@@ -46,8 +46,7 @@ public class TileManager: Singleton<TileManager>
         get { return path; }
         set
         {
-            //현재 위치한 노드가 value상에 있다면 해당 인덱스부터 끝까지만 사용(앞부분 무쓸모)
-            
+            value.Remove(value[0]);
             path = value;
         }
     }
