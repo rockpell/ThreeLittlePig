@@ -132,4 +132,9 @@ public class Pig : MonoBehaviour
         get { return nowConstructWallType; }
         set { nowConstructWallType = value; }
     }
+
+    public int FireResistance {
+        get { return fireResistance; }
+        set { fireResistance = value; }
+    }
 }
