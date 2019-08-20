@@ -7,7 +7,7 @@ public class Pig : MonoBehaviour
     [SerializeField] Transform spriteObject;
 
     private WallType nowConstructWallType = WallType.STRAW;
-    private WallType nowSelectTileWallType = WallType.NONE; // 타일을 가져오는게 나을지도
+    private WallType nowLookTileWallType = WallType.NONE; // 타일을 가져오는게 나을지도
 
     private MapNode nowLookTile;
 
@@ -54,7 +54,16 @@ public class Pig : MonoBehaviour
     public void constructionWall()
     {
         Debug.Log("constructionWall");
-        switch (nowConstructWallType)
+        // 늑대가 없고 풀타일일 경우 벽 생성가능(아무것도 없을때)
+        if(nowLookTileWallType == WallType.NONE)
+        {
+            constructionWall(nowConstructWallType);
+        }
+    }
+
+    private void constructionWall(WallType wallType)
+    {
+        switch (wallType)
         {
             case WallType.STRAW:
                 break;
@@ -68,7 +77,7 @@ public class Pig : MonoBehaviour
     public void destroyWall() // 나무, 벽돌 벽일 경우에만 작동 가능
     {
         Debug.Log("destroyWall");
-        switch (nowSelectTileWallType)
+        switch (nowLookTileWallType)
         {
             case WallType.WOOD:
                 break;
@@ -80,7 +89,7 @@ public class Pig : MonoBehaviour
     public void fireWall() // 짚, 나무 벽돌일 경우에만 작동 가능
     {
         Debug.Log("fireWall");
-        switch (nowSelectTileWallType)
+        switch (nowLookTileWallType)
         {
             case WallType.STRAW:
                 break;
@@ -97,5 +106,30 @@ public class Pig : MonoBehaviour
     public void setNowLookTile(MapNode tile)
     {
         nowLookTile = tile;
+    }
+
+    public void wheelNowConstructWallType(float value)
+    {
+        int _index = (int)nowConstructWallType;
+        if (value > 0)
+        {
+            ++_index;
+        }
+        else if(value < 0)
+        {
+            --_index;
+        }
+
+        if (_index > 2)
+            _index = 0;
+        else if (_index < 0)
+            _index = 2;
+
+        nowConstructWallType = (WallType)_index;
+    }
+
+    public WallType NowConstructWallType {
+        get { return nowConstructWallType; }
+        set { nowConstructWallType = value; }
     }
 }

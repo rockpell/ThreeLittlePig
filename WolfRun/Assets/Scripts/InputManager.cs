@@ -27,7 +27,7 @@ public class InputManager : MonoBehaviour
         nowPlayer.move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         nowPlayer.lookMouse(_mouseWorldPosition);
 
-        nowPlayer.setNowLookTile(TileManager.Instance.lookForwardTile(nowPlayer.transform.position, _mouseWorldPosition));
+        //nowPlayer.setNowLookTile(TileManager.Instance.lookForwardTile(nowPlayer.transform.position, _mouseWorldPosition));
 
         wheelValue = Input.GetAxisRaw("Mouse ScrollWheel");
 
@@ -46,7 +46,7 @@ public class InputManager : MonoBehaviour
         }
         else if(wheelValue != 0) // 밑으로 휠 -값 위로 휠 +값
         {
-
+            nowPlayer.wheelNowConstructWallType(wheelValue);
         }
 
     }
