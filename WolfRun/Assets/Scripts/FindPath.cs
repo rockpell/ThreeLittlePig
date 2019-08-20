@@ -14,6 +14,7 @@ public class FindPath : MonoBehaviour
     {
         openList = new List<MapNode>();
         closeList = new List<MapNode>();
+        mapLists = TileManager.Instance.MapLists;
     }
     //테스트용 코드, 나중에 지울꺼
     public void PushButton()

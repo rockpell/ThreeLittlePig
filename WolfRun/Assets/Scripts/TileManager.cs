@@ -34,10 +34,13 @@ public class TileManager: Singleton<TileManager>
     //이웃하는 타일을 넘겨줄 수 있어야 함(상하좌우)
     //이동 할 경로를 넘겨줄 수 있어야 
     [SerializeField] private List<MapList> mapLists;
-    [SerializeField] private List<MapNode> path;
+    public List<MapList> MapLists
+    {
+        get { return mapLists; }
+    }
     [SerializeField] private int mapWidthSize;
     [SerializeField] private int mapHeightSize;
-
+    [SerializeField] private List<MapNode> path;
     public List<MapNode> Path
     {
         get { return path; }
