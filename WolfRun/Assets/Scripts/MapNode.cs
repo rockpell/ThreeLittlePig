@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MapNode:MonoBehaviour
 {
+    //해당 타일의 종류(지나갈 수 있는 타입인지 없는 타입인지, 비용은 얼마인지 책정)
+    [SerializeField] private WallType wallState;
     //지나가는데 필요한 비용(짚, 나무, 벽돌 순으로 비용이 높아짐)
     [SerializeField] private int weight;
     [SerializeField] private bool isPath;
@@ -24,7 +26,35 @@ public class MapNode:MonoBehaviour
     {
         
     }
-    
+
+    private void changeState(WallType type)
+    {
+        switch(type)
+        {
+            case WallType.NONE:
+                isPath = true;
+                break;
+            case WallType.STRAW:
+                isPath = false;
+                weight = 1;
+                break;
+            case WallType.WOOD:
+                isPath = false;
+                weight = 2;
+                break;
+            case WallType.BRICK:
+                isPath = false;
+                weight = 3;
+                break;
+            case WallType.TREE:
+                isPath = false;
+                break;
+            case WallType.STONE:
+                isPath = false;
+                break;
+        }
+    }
+
     public bool IsPath
     {
         get { return isPath; }
