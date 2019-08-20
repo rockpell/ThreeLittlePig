@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Pig : MonoBehaviour
 {
-    private int fireResistance = 100;
-    private float moveSpeed = 1.0f;
-    private float[] constructionSpeed = new float[3]; // 짚, 나무, 벽돌
+    [SerializeField] Transform spriteObject;
 
     private WallType nowConstructWallType = WallType.STRAW;
     private WallType nowSelectTileWallType = WallType.NONE; // 타일을 가져오는게 나을지도
+
+    private int fireResistance = 100;
+    private float moveSpeed = 4.0f;
+    private float[] constructionSpeed = new float[3]; // 짚, 나무, 벽돌
+
+    private float rotateValue;
+    Vector3 playerPosition;
 
     void Awake()
     {
@@ -37,11 +42,16 @@ public class Pig : MonoBehaviour
 
     public void lookMouse(Vector3 targetPosition)
     {
-
+        playerPosition = spriteObject.position;
+        Vector2 direction = new Vector2(targetPosition.x - playerPosition.x, targetPosition.y - playerPosition.y);
+        float rad = Mathf.Atan2(direction.x, direction.y);
+        rotateValue = (rad * 180) / Mathf.PI;
+        spriteObject.localEulerAngles = new Vector3(0, 0, (-rotateValue + 180));
     }
 
     public void constructionWall()
     {
+        Debug.Log("constructionWall");
         switch (nowConstructWallType)
         {
             case WallType.STRAW:
@@ -55,6 +65,7 @@ public class Pig : MonoBehaviour
 
     public void destroyWall() // 나무, 벽돌 벽일 경우에만 작동 가능
     {
+        Debug.Log("destroyWall");
         switch (nowSelectTileWallType)
         {
             case WallType.WOOD:
@@ -66,6 +77,7 @@ public class Pig : MonoBehaviour
 
     public void fireWall() // 짚, 나무 벽돌일 경우에만 작동 가능
     {
+        Debug.Log("fireWall");
         switch (nowSelectTileWallType)
         {
             case WallType.STRAW:
@@ -77,6 +89,6 @@ public class Pig : MonoBehaviour
 
     public void dressingUp() // 늑대한테 옷 입히기
     {
-
+        Debug.Log("dressingUp");
     }
 }
