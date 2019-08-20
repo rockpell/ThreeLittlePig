@@ -93,7 +93,7 @@ public class TileManager: Singleton<TileManager>
             }
         }
     }
-    private MapNode findCurrentNode(Vector3 playerPos)
+    public MapNode findCurrentNode(Vector3 playerPos)
     {
         MapNode node = null;
         float minDistance = float.MaxValue;

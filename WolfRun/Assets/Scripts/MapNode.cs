@@ -53,8 +53,21 @@ public class MapNode:MonoBehaviour
             case WallType.STONE:
                 isPath = false;
                 break;
+            case WallType.FIRE:
+                isPath = false;
+                //burn함수 호출
+                break;
         }
         wallState = type;
+    }
+
+    private void burn()
+    {
+        //주변 노드가 짚/나무벽인 경우 상태를 불태움으로 변경하고 changeState 호출
+        //일정시간동안 불탐 상태 유지
+        //유지하는 동안 주변노드에 돼지가 있으면 데미지
+        //한번 데미지를 받으면 일정시간 이후 데미지
+        //IEnumerator 써야 할듯
     }
 
     public bool IsPath
