@@ -20,7 +20,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             {
                 instance = new GameObject("@" + typeof(T).ToString(),
                     typeof(T)).AddComponent<T>();
-                DontDestroyOnLoad(instance);
+                //DontDestroyOnLoad(instance);
             }
             return instance;
         }
@@ -32,10 +32,64 @@ public class TileManager: Singleton<TileManager>
     //맵을 담고 관리하는 클래스
     //플레이어가 바라보는 방향 바로 앞의 타일 반환 함수가 있어야 함(가까운 각도의 방향)
     //이웃하는 타일을 넘겨줄 수 있어야 함(상하좌우)
-    //이동 할 경로를 넘겨줄 수 있어야 함
+    //이동 할 경로를 넘겨줄 수 있어야 
     [SerializeField] private List<MapList> mapLists;
     [SerializeField] private List<MapNode> path;
+    [SerializeField] private int mapWidthSize;
+    [SerializeField] private int mapHeightSize;
 
+    public List<MapNode> Path
+    {
+        get { return path; }
+        set
+        {
+            //현재 위치한 노드가 value상에 있다면 해당 인덱스부터 끝까지만 사용(앞부분 무쓸모)
+            
+            path = value;
+        }
+    }
+    private void Awake()
+    {
+        mapLists = new List<MapList>();
+        for (int i = 0; i < mapHeightSize; i++)
+        {
+            MapList list = new MapList();
+            mapLists.Add(list);
+            mapLists[i].nodes = new List<MapNode>();
+        }
+        Debug.Log(mapLists.Count);
+        path = new List<MapNode>();
+        initiateMapData();
+    }
+    private void initiateMapData()
+    {
+        //씬에 있는 맵을 List에 넣고 Position별로 정렬하여 mapList에 할당
+        List<GameObject> nodes = new List<GameObject>(GameObject.FindGameObjectsWithTag("Tile"));
+        nodes.Sort(delegate (GameObject A, GameObject B)
+        {
+            if (A.transform.position.x > B.transform.position.x) return 1;
+            else if (A.transform.position.x < B.transform.position.x) return -1;
+            return 0;
+        });
+        //x로 정렬 -> mapHeightSize만큼 리스트 앞에 집어넣음
+        for(int i = 0; i < mapWidthSize; i++)
+        {
+            //nodes를 시작점부터 mapHeightSize만큼 y에 대해 정렬
+            List<GameObject> list = nodes.GetRange(i*mapHeightSize, mapHeightSize);
+            list.Sort(delegate (GameObject A, GameObject B)
+            {
+                if (A.transform.position.y > B.transform.position.y) return 1;
+                else if (A.transform.position.y < B.transform.position.y) return -1;
+                return 0;
+            });
+            //list를 y에 대해 정렬함(작은게 앞에 있으니까 순서대로 넣으면 됨)
+            for (int j = 0; j < mapHeightSize; j++)
+            {
+                Debug.Log(list[j].GetComponent<MapNode>());
+                mapLists[j].nodes.Add(list[j].GetComponent<MapNode>());
+            }
+        }
+    }
     private MapNode findCurrentNode(Vector3 playerPos)
     {
         MapNode node = null;

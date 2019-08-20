@@ -82,6 +82,7 @@ public class FindPath : MonoBehaviour
             //일단은 이웃이 없으면 막힌 공간으로 판정하도록 함
         }
         //closeList를 TileManager의 Path로 넘겨줘야 함
+        TileManager.Instance.Path = new List<MapNode>(closeList);
     }
 
     void calculateCost(MapNode node, MapNode finishNode)

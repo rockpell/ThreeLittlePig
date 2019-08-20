@@ -15,10 +15,11 @@ public class MapNode:MonoBehaviour
     [SerializeField] private int moveCost;
 
     [SerializeField] private MapNode parentNode;
+    private int counter;
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -35,15 +36,15 @@ public class MapNode:MonoBehaviour
                 isPath = true;
                 break;
             case WallType.STRAW:
-                isPath = false;
+                isPath = true;
                 weight = 1;
                 break;
             case WallType.WOOD:
-                isPath = false;
+                isPath = true;
                 weight = 2;
                 break;
             case WallType.BRICK:
-                isPath = false;
+                isPath = true;
                 weight = 3;
                 break;
             case WallType.TREE:
