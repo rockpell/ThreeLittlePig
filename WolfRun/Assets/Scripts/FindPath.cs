@@ -2,16 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class MapList
-{
-    public List<MapNode> nodes;
-}
-
 public class FindPath : MonoBehaviour
 {
     [SerializeField] private List<MapList> mapLists;
-    [SerializeField] private List<MapNode> path;
     [SerializeField] private MapNode start;
     [SerializeField] private MapNode finish;
 
@@ -21,16 +14,16 @@ public class FindPath : MonoBehaviour
     {
         openList = new List<MapNode>();
         closeList = new List<MapNode>();
-        initializePath(start, finish);
     }
     //테스트용 코드, 나중에 지울꺼
     public void PushButton()
     {
         initializePath(start, finish);
+        
     }
     void Update()
     {
-        
+        Debug.Log(TileManager.Instance.lookForwardTile(start.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
     }
     void initializePath(MapNode startNode, MapNode finishNode)
     {
@@ -88,7 +81,7 @@ public class FindPath : MonoBehaviour
             //만약 막힌 공간이라 더이상 진행이 불가능할 경우 탈출코드가 필요함
             //일단은 이웃이 없으면 막힌 공간으로 판정하도록 함
         }
-        path = new List<MapNode>(closeList);
+        //closeList를 TileManager의 Path로 넘겨줘야 함
     }
 
     void calculateCost(MapNode node, MapNode finishNode)
@@ -114,6 +107,8 @@ public class FindPath : MonoBehaviour
         int i = 0;
         int j = 0;
 
+        TileManager.Instance.findNodeIndex(start, out i, out j);
+        /*
         foreach (MapList list in mapLists)
         {
             foreach (MapNode node in list.nodes)
@@ -125,6 +120,7 @@ public class FindPath : MonoBehaviour
                 }
             }
         }
+        */
         Debug.Log("i: " + i + " j: " + j);
         List<MapNode> _neighbor = new List<MapNode>();
         if(i > 0)
