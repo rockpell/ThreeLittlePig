@@ -27,7 +27,7 @@ public class MapNode:MonoBehaviour
         
     }
 
-    private void changeState(WallType type)
+    public void changeState(WallType type)
     {
         switch(type)
         {
@@ -53,6 +53,7 @@ public class MapNode:MonoBehaviour
                 isPath = false;
                 break;
         }
+        wallState = type;
     }
 
     public bool IsPath
