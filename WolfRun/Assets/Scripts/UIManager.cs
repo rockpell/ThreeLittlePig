@@ -8,14 +8,26 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] Button[] wallButtons;
     [SerializeField] Text aliveTimeText;
     [SerializeField] Text scoreText;
+    [SerializeField] Text plusScoreText;
 
     [SerializeField] private Image[] cooldownImages;
 
     private float deltaTime;
 
+    private GameManager gameManager;
+
+    private Queue<int> scoreEffectQueue;
+    private Coroutine nowCoroutine;
+
     void Awake()
     {
         instance = this;
+    }
+
+    void Start()
+    {
+        scoreEffectQueue = new Queue<int>();
+        gameManager = GameManager.instance;
     }
 
     // Update is called once per frame
@@ -56,7 +68,85 @@ public class UIManager : Singleton<UIManager>
 
     public void plusScoreEffect(int value)
     {
+        scoreEffectQueue.Enqueue(value);
 
+        if(nowCoroutine != null)
+        {
+            StopAllCoroutines();
+            nowCoroutine = null;
+            nowCoroutine = StartCoroutine(scoreSequence());
+        }
+        else
+        {
+            nowCoroutine = StartCoroutine(scoreSequence());
+        }
+    }
+
+    private IEnumerator scoreSequence()
+    {
+        plusScoreText.text = "";
+        yield return StartCoroutine(appearScoreEffect());
+
+        while (scoreEffectQueue.Count > 0)
+        {
+            plusScoreText.text = "+" + scoreEffectQueue.Dequeue();
+            yield return new WaitForSeconds(1f);
+        }
+
+        yield return StartCoroutine(disappearScoreEffect());
+        nowCoroutine = null;
+    }
+
+    private IEnumerator appearScoreEffect()
+    {
+        float _alpha = 0;
+
+        plusScoreText.color = new Color(0, 0, 0, _alpha);
+        plusScoreText.gameObject.SetActive(true);
+
+        StartCoroutine(upScoreEffect());
+
+        while (_alpha < 1)
+        {
+            _alpha += 0.1f;
+            if (_alpha > 1)
+                _alpha = 1;
+            plusScoreText.color = new Color(0, 0, 0, _alpha);
+            yield return null;
+        }
+
+        yield return null;
+    }
+
+    private IEnumerator upScoreEffect()
+    {
+        Vector3 _upPosition = new Vector3(0, 0, 0);
+        Vector3 _playerPosition = playerToScreenPosition();
+
+        plusScoreText.transform.position = _playerPosition;
+
+        while (_upPosition.y < 60)
+        {
+            _upPosition.y += 3f;
+            plusScoreText.transform.position = _playerPosition + _upPosition;
+            yield return null;
+        }
+    }
+
+    private IEnumerator disappearScoreEffect()
+    {
+        float _alpha = 1;
+        plusScoreText.color = new Color(0, 0, 0, _alpha);
+
+        while (_alpha > 0)
+        {
+            _alpha -= 0.1f;
+            if (_alpha < 0)
+                _alpha = 0;
+            plusScoreText.color = new Color(0, 0, 0, _alpha);
+            yield return null;
+        }
+        plusScoreText.gameObject.SetActive(true);
     }
 
     public void gameEndingUI(GameEnding gameEnding)
@@ -91,5 +181,10 @@ public class UIManager : Singleton<UIManager>
                 cooldownImages[i].fillAmount = _player.getLeftCooldown(i) / _player.getCooldown(i);
             }
         }
+    }
+
+    private Vector3 playerToScreenPosition()
+    {
+        return Camera.main.WorldToScreenPoint(gameManager.Player.transform.position);
     }
 }
