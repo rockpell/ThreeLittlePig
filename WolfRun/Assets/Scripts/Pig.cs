@@ -24,6 +24,7 @@ public class Pig : MonoBehaviour
 
     private Rigidbody2D rigid;
     private UIManager uiManager = null;
+    private GameManager gameManager = null;
 
     void Awake()
     {
@@ -44,6 +45,7 @@ public class Pig : MonoBehaviour
             rigid = gameObject.AddComponent<Rigidbody2D>();
 
         uiManager = UIManager.Instance;
+        gameManager = GameManager.Instance;
 
         NowConstructWallType = WallType.STRAW;
     }
@@ -94,6 +96,7 @@ public class Pig : MonoBehaviour
         {
             case WallType.STRAW:
                 leftCooldown[0] = cooldownWall[0];
+                //gameManager.plusScore(ScoreEvent.STUN);
                 break;
             case WallType.WOOD:
                 leftCooldown[1] = cooldownWall[1];

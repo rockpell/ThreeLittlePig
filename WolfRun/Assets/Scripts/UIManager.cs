@@ -38,6 +38,7 @@ public class UIManager : Singleton<UIManager>
         {
             deltaTime -= 0.2f;
             cooldownUI();
+            scoreText.text = gameManager.Score.ToString();
         }
     }
 

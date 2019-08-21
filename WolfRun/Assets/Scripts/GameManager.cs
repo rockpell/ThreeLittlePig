@@ -51,11 +51,9 @@ public class GameManager : Singleton<GameManager>
         {
             case ScoreEvent.STUN:
                 plusScore(100);
-                uiManager.plusScoreEffect(100);
                 break;
             case ScoreEvent.DRESSUP:
                 plusScore(300);
-                uiManager.plusScoreEffect(300);
                 break;
         }
     }
@@ -87,6 +85,7 @@ public class GameManager : Singleton<GameManager>
 
     private void plusScore(int value)
     {
+        score += value;
         uiManager.plusScoreEffect(value);
     }
 
