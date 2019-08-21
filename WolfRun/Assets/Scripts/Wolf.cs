@@ -20,15 +20,15 @@ public class Wolf : MonoBehaviour
 
     private float stunTimer;
 
-    [SerializeField] private MapNode currentNode;
+    private MapNode currentNode;
     public MapNode CurrentNode
     {
         get { return currentNode; }
     }
 
     private List<MapNode> path;
-    [SerializeField] private MapNode nextMoveNode;
-    [SerializeField] private GameObject player;
+    private MapNode nextMoveNode;
+    private GameObject player;
 
     private bool isWait;
     void Start()

@@ -4,33 +4,17 @@ using UnityEngine;
 
 public class FindPath : MonoBehaviour
 {
-    [SerializeField] private List<MapList> mapLists;
-    [SerializeField] private MapNode startNode;
-    public MapNode StartNode
-    {
-        get { return startNode; }
-        set { startNode = value; }
-    }
-    [SerializeField] private MapNode finishNode;
-    public MapNode FinishNode
-    {
-        get { return finishNode; }
-        set { finishNode = value; }
-    }
-    [SerializeField] private List<MapNode> openList;
-    [SerializeField] private List<MapNode> closeList;
+    private List<MapList> mapLists;
+
+    private List<MapNode> openList;
+    private List<MapNode> closeList;
     void Start()
     {
         mapLists = TileManager.Instance.MapLists;
         openList = new List<MapNode>();
         closeList = new List<MapNode>();
     }
-    //테스트용 코드, 나중에 지울꺼
-    public void PushButton()
-    {
-        initializePath(startNode, finishNode);
-        
-    }
+
     void Update()
     {
     }
