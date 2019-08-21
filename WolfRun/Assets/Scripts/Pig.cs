@@ -5,6 +5,7 @@ using UnityEngine;
 public class Pig : MonoBehaviour
 {
     [SerializeField] Transform spriteObject;
+    [SerializeField] Sprite[] sprites;
 
     private WallType nowConstructWallType = WallType.STRAW;
 
@@ -69,7 +70,7 @@ public class Pig : MonoBehaviour
         Vector2 direction = new Vector2(targetPosition.x - playerPosition.x, targetPosition.y - playerPosition.y);
         float rad = Mathf.Atan2(direction.x, direction.y);
         rotateValue = (rad * 180) / Mathf.PI;
-        spriteObject.localEulerAngles = new Vector3(0, 0, (-rotateValue + 180));
+        spriteObject.localEulerAngles = new Vector3(0, 0, -rotateValue);
     }
 
     public void constructionWall()
@@ -154,8 +155,7 @@ public class Pig : MonoBehaviour
         else if (_index < 0)
             _index = 2;
 
-        nowConstructWallType = (WallType)_index;
-        uiManager.highlightButton((int)nowConstructWallType);
+        NowConstructWallType = (WallType)_index;
     }
 
     public void progressCooldown(float decreaseValue)
@@ -173,6 +173,7 @@ public class Pig : MonoBehaviour
         {
             nowConstructWallType = value;
             uiManager.highlightButton((int)nowConstructWallType);
+            spriteObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)nowConstructWallType];
         }
     }
 
