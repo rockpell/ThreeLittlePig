@@ -13,8 +13,12 @@ public class Wolf : MonoBehaviour
     private float howlingCntTime;
 
     private bool isSummon;
-    [SerializeField] private float summonWoflTime;
+    [SerializeField] private float summonWolfTime;
     private float summonWolfCntTime;
+    [SerializeField] private GameObject summon;
+
+    [SerializeField] private float findPathTime;
+    private float findPathCntTime;
 
     private float windTimer;
 
@@ -45,6 +49,12 @@ public class Wolf : MonoBehaviour
     {
         summonWolfCntTime += Time.deltaTime;
         howlingCntTime += Time.deltaTime;
+        findPathCntTime += Time.deltaTime;
+        if(findPathCntTime > findPathTime)
+        {
+            findPathCntTime = 0;
+            findPath.initializePath(currentNode, findPlayerNode());
+        }
         if(isWait == false)//지금이 대기상태인지 나타냄
         {
             movePath();
@@ -61,7 +71,7 @@ public class Wolf : MonoBehaviour
         }
         else
         {
-            if((summonWolfCntTime > summonWoflTime) && isSummon)
+            if((summonWolfCntTime > summonWolfTime) && isSummon)
             {
                 summonWolfCntTime = 0;
                 summonWolf();
@@ -159,7 +169,7 @@ public class Wolf : MonoBehaviour
                 case WallType.STRAW:
                     blowWind(nextNode.Weight, nextNode);
                     break;
-                case WallType.TREE:
+                case WallType.WOOD:
                     blowWind(nextNode.Weight, nextNode);
                     break;
                 case WallType.BRICK:
@@ -177,6 +187,13 @@ public class Wolf : MonoBehaviour
                     //다른 타입은 고정된 것이기에 연산 필요 없음
             }
         }
+        else
+        {
+            //Path가 없는 경우 => 갈 길이 없는 경우이므로 불타는 벽으로 막힌 경우
+            //대기를 하며 길이 열리거나 동료 소환 쿨타임이 되기를 기다려야 함
+            isWait = true;
+            isSummon = true;
+        }
     }
 
     private void summonWolf()
@@ -184,8 +201,24 @@ public class Wolf : MonoBehaviour
         //이동 가능한 경로가 null인 경우 호출됨
         //맵 상에 있는 벽과 불타는 벽을 제거
         //제거에 연출 들어갈 수 있음
-        Debug.Log("동료 소환");
+        List<MapList> lists = TileManager.Instance.MapLists;
 
+        foreach(MapList list in lists)
+        {
+            foreach(MapNode node in list.nodes)
+            {
+                if((node.WallState == WallType.STRAW)||
+                    (node.WallState == WallType.WOOD)||
+                    (node.WallState == WallType.BRICK)||
+                    (node.WallState == WallType.FIRE))
+                {
+                    GameObject _summon = Instantiate(summon, node.transform.position, Quaternion.identity);
+                    _summon.GetComponent<SummonWolf>().Node = node;
+                }
+            }
+        }
+        isWait = false;
+        isSummon = false;
     }
 
     private void blowWind(int weight, MapNode node)
@@ -208,6 +241,7 @@ public class Wolf : MonoBehaviour
             yield return null;
         }
         Debug.Log("바람 끝");
+        node.changeState(WallType.NONE);
         windTimer = 0;
         isWait = false;
     }
@@ -215,6 +249,7 @@ public class Wolf : MonoBehaviour
     private void windEffect(int time)
     {
         //time만큼 바람 부는듯한 느낌 주도록 애니메이션이든 파티클이든 재생
+        //이미지 변경하는걸로 됨
 
     }
     private void howling()
