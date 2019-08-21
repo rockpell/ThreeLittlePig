@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2825484270903301640}
   m_Layer: 0
   m_Name: Tile_stone
-  m_TagString: Untagged
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,3 +98,6 @@ MonoBehaviour:
   cost: 0
   moveCost: 0
   parentNode: {fileID: 0}
+  normalSprite: {fileID: 0}
+  fireSprite: {fileID: 0}
+  wallSprite: []
