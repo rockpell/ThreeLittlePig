@@ -21,6 +21,9 @@ public class MapNode:MonoBehaviour
     [SerializeField] private MapNode parentNode;
     private int counter;
 
+    [SerializeField] private Sprite normalSprite;
+    [SerializeField] private Sprite fireSprite;
+    [SerializeField] private Sprite[] wallSprite;
     void Start()
     {
 
@@ -39,18 +42,22 @@ public class MapNode:MonoBehaviour
             case WallType.NONE:
                 isPath = true;
                 weight = 0;
+                this.gameObject.GetComponent<SpriteRenderer>().sprite = normalSprite;
                 break;
             case WallType.STRAW:
                 isPath = true;
                 weight = 1;
+                this.gameObject.GetComponent<SpriteRenderer>().sprite = wallSprite[0];
                 break;
             case WallType.WOOD:
                 isPath = true;
                 weight = 2;
+                this.gameObject.GetComponent<SpriteRenderer>().sprite = wallSprite[1];
                 break;
             case WallType.BRICK:
                 isPath = true;
                 weight = 3;
+                this.gameObject.GetComponent<SpriteRenderer>().sprite = wallSprite[2];
                 break;
             case WallType.TREE:
                 isPath = false;
@@ -63,6 +70,7 @@ public class MapNode:MonoBehaviour
             case WallType.FIRE:
                 isPath = false;
                 weight = 0;
+                this.gameObject.GetComponent<SpriteRenderer>().sprite = fireSprite;
                 //burn함수 호출
                 break;
         }

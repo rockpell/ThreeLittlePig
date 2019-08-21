@@ -98,3 +98,9 @@ MonoBehaviour:
   cost: 0
   moveCost: 0
   parentNode: {fileID: 0}
+  normalSprite: {fileID: 21300000, guid: 6b8354213e3119c48908e710802128de, type: 3}
+  fireSprite: {fileID: 0}
+  wallSprite:
+  - {fileID: 21300000, guid: aba53f1dba2ddaa4da4e8fca44da0623, type: 3}
+  - {fileID: 21300000, guid: 021f6193e4f578045af3f107355826e0, type: 3}
+  - {fileID: 21300000, guid: 0dac55504e8196b40b42a0c57d504bbb, type: 3}
