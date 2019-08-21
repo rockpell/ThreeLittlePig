@@ -50,7 +50,18 @@ public class Pig : MonoBehaviour
         NowConstructWallType = WallType.STRAW;
     }
 
-    // Update is called once per frame
+    void Update()
+    {
+        if (nowLookTile != null && (nowLookTile.WallState == WallType.STRAW || nowLookTile.WallState == WallType.WOOD))
+        {
+            UIManager.Instance.showFireText(true);
+        }
+        else
+        {
+            UIManager.Instance.showFireText(false);
+        }
+    }
+
     void FixedUpdate()
     {
         rigid.MovePosition(rigid.position + direction * moveSpeed * Time.fixedDeltaTime);
@@ -193,5 +204,10 @@ public class Pig : MonoBehaviour
     public float getCooldown(int index)
     {
         return cooldownWall[index];
+    }
+
+    public Vector3 getFireTextPosition()
+    {
+        return transform.GetChild(1).position;
     }
 }

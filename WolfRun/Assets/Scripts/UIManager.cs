@@ -5,12 +5,14 @@ using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
-    [SerializeField] Button[] wallButtons;
-    [SerializeField] Text aliveTimeText;
-    [SerializeField] Text scoreText;
-    [SerializeField] Text plusScoreText;
+    [SerializeField] private Button[] wallButtons;
+    [SerializeField] private Text aliveTimeText;
+    [SerializeField] private Text scoreText;
+    [SerializeField] private Text plusScoreText;
 
     [SerializeField] private Image[] cooldownImages;
+
+    [SerializeField] private GameObject fireTextObject;
 
     private float deltaTime;
 
@@ -187,5 +189,21 @@ public class UIManager : Singleton<UIManager>
     private Vector3 playerToScreenPosition()
     {
         return Camera.main.WorldToScreenPoint(gameManager.Player.transform.position);
+    }
+
+    private Vector3 playerFireTextToScreenPosition()
+    {
+        return Camera.main.WorldToScreenPoint(gameManager.Player.getFireTextPosition());
+    }
+
+    public void showFireText(bool value)
+    {
+        if(fireTextObject.activeSelf != value)
+            fireTextObject.SetActive(value);
+
+        if (value)
+        {
+            fireTextObject.transform.position = playerFireTextToScreenPosition();
+        }
     }
 }
