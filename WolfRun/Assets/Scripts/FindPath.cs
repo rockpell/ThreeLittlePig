@@ -18,9 +18,21 @@ public class FindPath : MonoBehaviour
     void Update()
     {
     }
+    private void initializeCost()
+    {
+        foreach(MapList list in mapLists)
+        {
+            foreach(MapNode node in list.nodes)
+            {
+                node.Cost = 0;
+                node.MoveCost = 0;
+            }
+        }
+    }
     public void initializePath(MapNode startNode, MapNode finishNode)
     {
         Debug.Log("start: "+startNode + "finish: "+finishNode);
+        initializeCost();
         openList.Clear();
         closeList.Clear();
 
@@ -53,7 +65,6 @@ public class FindPath : MonoBehaviour
                     TileManager.Instance.Path.Clear();
                     return;
                 }
-                    
                 else
                 {
                     closeList.Add(openList[0]);
@@ -62,7 +73,6 @@ public class FindPath : MonoBehaviour
                 }
             }
             openList.AddRange(_neighbors);
-            Debug.Log("OpenList Count: " + openList.Count + "OpenList: " + openList[0]);
             if (openList.Count == 0)
                 return;
             foreach (MapNode node in openList)
@@ -88,8 +98,13 @@ public class FindPath : MonoBehaviour
             //만약 막힌 공간이라 더이상 진행이 불가능할 경우 탈출코드가 필요함
             //일단은 이웃이 없으면 막힌 공간으로 판정하도록 함
         }
-        //closeList를 TileManager의 Path로 넘겨줘야 함
-        TileManager.Instance.Path = new List<MapNode>(closeList);
+        //목적지부터 출발지가 나올 때 까지 부모노드를 따라가면 경로가 생성됨
+        MapNode _node = finishNode;
+        while(_node != startNode)
+        {
+            TileManager.Instance.Path.Insert(0, _node);
+            _node = _node.ParentNode;
+        }
     }
 
     void calculateCost(MapNode node, MapNode finishNode)
@@ -231,7 +246,6 @@ public class FindPath : MonoBehaviour
         {
             if (closeList.Contains(_neighbor[index]))
             {
-                Debug.Log("Remove openList in closeNode");
                 _neighbor.Remove(_neighbor[index]);
                 index--;
             }
@@ -244,7 +258,6 @@ public class FindPath : MonoBehaviour
                 }
             }
         }
-        Debug.Log("neighbor Size: " + _neighbor.Count);
         foreach(MapNode node in _neighbor)
         {
             node.ParentNode = mapLists[i].nodes[j];

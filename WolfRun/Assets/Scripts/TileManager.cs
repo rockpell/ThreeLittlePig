@@ -65,7 +65,6 @@ public class TileManager: Singleton<TileManager>
             mapLists.Add(list);
             mapLists[i].nodes = new List<MapNode>();
         }
-        Debug.Log(mapLists.Count);
         path = new List<MapNode>();
         initiateMapData();
     }
@@ -93,7 +92,6 @@ public class TileManager: Singleton<TileManager>
             //list를 y에 대해 정렬함(작은게 앞에 있으니까 순서대로 넣으면 됨)
             for (int j = 0; j < mapHeightSize; j++)
             {
-                Debug.Log(list[j].GetComponent<MapNode>());
                 mapLists[j].nodes.Add(list[j].GetComponent<MapNode>());
             }
         }
@@ -114,7 +112,6 @@ public class TileManager: Singleton<TileManager>
                 }
             }
         }
-        Debug.Log("CurNode: " + node);
         return node;
     }
     public void findNodeIndex(MapNode node, out int i, out int j)
@@ -150,7 +147,6 @@ public class TileManager: Singleton<TileManager>
         int _i, _j;
         findNodeIndex(findCurrentNode(playerPos), out _i, out _j);
         //범위를 벗어나는 방향으로 보는 경우 Null 리턴
-        Debug.Log("i: " + _i + "j:" + _j);
         if ((_angle > -45) && (_angle < 45))
         {
             //Up

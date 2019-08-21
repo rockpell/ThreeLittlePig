@@ -55,7 +55,6 @@ public class Wolf : MonoBehaviour
             }
             if(currentNode != nextMoveNode)
             {
-                Debug.Log("cur: " + currentNode + "next: " + nextMoveNode);
                 //이동/회전 코드 적고 이동이 완료되면 Path에서 0번 제거
                 StartCoroutine(moveAndRotate());
             }
@@ -168,7 +167,6 @@ public class Wolf : MonoBehaviour
                     break;
                 case WallType.FIRE:
                     //다음 이동할 타일이 불타고 있으므로 재연산, 만약 Null값이 리턴된다면 대기(대기 중 쿨타임이 되면 동료 소환)
-                    Debug.Log("Fire Wall");
                     findPath.initializePath(currentNode, TileManager.Instance.findCurrentNode(player.transform.position));
                     if (TileManager.Instance.Path.Count == 0)
                     {
