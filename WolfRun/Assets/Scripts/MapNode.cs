@@ -32,10 +32,10 @@ public class MapNode:MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    public void changeState(WallType type)
+    public void changeState(WallType type, bool isHorizontal = true)
     {
         switch(type)
         {
@@ -75,8 +75,20 @@ public class MapNode:MonoBehaviour
                 break;
         }
         wallState = type;
+        changeRotate(isHorizontal);
     }
-
+    private void changeRotate(bool isHorizontal)
+    {
+        if(isHorizontal == false)
+        {
+            //세로 방향 설치
+            this.transform.rotation = Quaternion.Euler(0, 0, 90);
+        }
+        else
+        {
+            this.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+    }
     private void burn()
     {
         //주변 노드가 짚/나무벽인 경우 상태를 불태움으로 변경하고 changeState 호출

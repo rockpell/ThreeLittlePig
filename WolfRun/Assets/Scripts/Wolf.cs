@@ -27,7 +27,7 @@ public class Wolf : MonoBehaviour
     }
 
     private List<MapNode> path;
-    private MapNode nextMoveNode;
+    [SerializeField] private MapNode nextMoveNode;
     private GameObject player;
 
     private bool isWait;
@@ -159,7 +159,7 @@ public class Wolf : MonoBehaviour
                 case WallType.STRAW:
                     blowWind(nextNode.Weight, nextNode);
                     break;
-                case WallType.WOOD:
+                case WallType.TREE:
                     blowWind(nextNode.Weight, nextNode);
                     break;
                 case WallType.BRICK:
@@ -209,7 +209,6 @@ public class Wolf : MonoBehaviour
         }
         Debug.Log("바람 끝");
         windTimer = 0;
-        node.changeState(WallType.NONE);
         isWait = false;
     }
 
