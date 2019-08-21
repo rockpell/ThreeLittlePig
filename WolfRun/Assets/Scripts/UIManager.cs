@@ -13,6 +13,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Image[] cooldownImages;
 
     [SerializeField] private GameObject fireTextObject;
+    [SerializeField] private GameObject endingObject;
 
     private float deltaTime;
 
@@ -205,5 +206,12 @@ public class UIManager : Singleton<UIManager>
         {
             fireTextObject.transform.position = playerFireTextToScreenPosition();
         }
+    }
+
+    [ContextMenu("Do Something")]
+    public void showEnding()
+    {
+        endingObject.SetActive(true);
+        //
     }
 }

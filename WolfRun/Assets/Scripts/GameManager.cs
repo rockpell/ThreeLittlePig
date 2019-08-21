@@ -10,10 +10,10 @@ public class GameManager : Singleton<GameManager>
 
     private UIManager uiManager = null;
 
-    private int fireCount = 0; // 방화 횟수
-    private int constructionCount = 0; // 건설 횟수
-    private int destroyCount = 0; // 벽 무너뜨린 횟수
-    private int dressUpCount = 0; // 늑대한테 옷 입힌 횟수
+    private int fireCount = 0; // 방화 횟수(방화)
+    private int dressUpCount = 0; // 늑대한테 옷 입힌 횟수(절도)
+    private int destroyCount = 0; // 벽 무너뜨린 횟수(특수폭행)
+    private int constructionCount = 0; // 건설 횟수(불법건축)
 
     private float aliveTime = 0;
     private int score = 0;
