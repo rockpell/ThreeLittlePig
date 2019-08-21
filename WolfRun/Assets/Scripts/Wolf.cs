@@ -40,6 +40,9 @@ public class Wolf : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        summonWolfCntTime += Time.deltaTime;
+        howlingCntTime += Time.deltaTime;
+
         if(isWait == false)//지금이 대기상태인지 나타냄
         {
             movePath();
@@ -51,14 +54,17 @@ public class Wolf : MonoBehaviour
             if(currentNode != nextMoveNode)
             {
                 Debug.Log("cur: " + currentNode + "next: " + nextMoveNode);
-                Debug.Log(currentNode != nextMoveNode);
                 //이동/회전 코드 적고 이동이 완료되면 Path에서 0번 제거
                 StartCoroutine(moveAndRotate());
             }
         }
         else
         {
-
+            if(summonWolfCntTime > summonWoflTime)
+            {
+                summonWolfCntTime = 0;
+                summonWolf();
+            }
         }
 
     }
@@ -109,7 +115,12 @@ public class Wolf : MonoBehaviour
                     break;
                 case WallType.FIRE:
                     //다음 이동할 타일이 불타고 있으므로 재연산, 만약 Null값이 리턴된다면 대기(대기 중 쿨타임이 되면 동료 소환)
+                    Debug.Log("Fire Wall");
                     findPath.initializePath(currentNode, TileManager.Instance.findCurrentNode(player.transform.position));
+                    if (TileManager.Instance.Path.Count == 0)
+                    {
+                        isWait = true;
+                    }
                     break;
                     //다른 타입은 고정된 것이기에 연산 필요 없음
             }
@@ -119,8 +130,9 @@ public class Wolf : MonoBehaviour
     private void summonWolf()
     {
         //이동 가능한 경로가 null인 경우 호출됨
-        //플레이어와 가까운 위치에(경로가 막히지 않은, 어느정도 거리는 확보된 구역) 생성
-        //속도가 기본 늑대보다 느리며 생성 직후 일정시간 대기
+        //맵 상에 있는 벽과 불타는 벽을 제거
+        //제거에 연출 들어갈 수 있음
+        Debug.Log("동료 소환");
     }
 
     private void blowWind(int weight, MapNode node)

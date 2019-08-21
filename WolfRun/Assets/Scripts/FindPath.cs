@@ -36,6 +36,7 @@ public class FindPath : MonoBehaviour
     }
     public void initializePath(MapNode startNode, MapNode finishNode)
     {
+        Debug.Log("start: "+startNode + "finish: "+finishNode);
         openList.Clear();
         closeList.Clear();
 
@@ -61,9 +62,23 @@ public class FindPath : MonoBehaviour
             if (_neighbors.Count == 0)
             {
                 Debug.Log("no exit");
-                return;
+                //지금 가는 경로로 도달 못함
+                //새로운 경로 찾아야 됨 -> openList에 남은 경로 활용
+                if (openList.Count == 0)
+                {
+                    TileManager.Instance.Path.Clear();
+                    return;
+                }
+                    
+                else
+                {
+                    closeList.Add(openList[0]);
+                    openList.Remove(openList[0]);
+                    _neighbors = getNeighbor(closeList[closeList.Count - 1]);
+                }
             }
             openList.AddRange(_neighbors);
+            Debug.Log("OpenList Count: " + openList.Count + "OpenList: " + openList[0]);
             if (openList.Count == 0)
                 return;
             foreach (MapNode node in openList)
@@ -81,7 +96,6 @@ public class FindPath : MonoBehaviour
             {
                 if(_neighbors.Contains(openList[i]))
                 {
-                    Debug.Log("Add closeList");
                     closeList.Add(openList[i]);
                     openList.Remove(openList[i]);
                     break;
@@ -103,7 +117,7 @@ public class FindPath : MonoBehaviour
     int calculateHeuristic(MapNode node, MapNode finishNode)
     {
         //장애물을 고려하지 않고 node에서 목적지까지 가는데 드는 예상 비용(귀찮으니까 그냥 목적지 노드에서 노드까지 거리로 설정함)
-        return (int)(Vector3.Distance(node.gameObject.transform.position, finishNode.gameObject.transform.position)*10);
+        return (int)(Vector3.Distance(node.gameObject.transform.position, finishNode.gameObject.transform.position)*100);
     }
     int calculateMoveCost(MapNode node)
     {
@@ -131,9 +145,8 @@ public class FindPath : MonoBehaviour
             }
         }
         */
-        Debug.Log("i: " + i + " j: " + j);
+        //Debug.Log("i: " + i + " j: " + j);
         List<MapNode> _neighbor = new List<MapNode>();
-        Debug.Log("MapList: " + mapLists[i]);
         if(i > 0)
         {
             if (i < mapLists.Count-1)
@@ -234,12 +247,12 @@ public class FindPath : MonoBehaviour
         {
             if (closeList.Contains(_neighbor[index]))
             {
+                Debug.Log("Remove openList in closeNode");
                 _neighbor.Remove(_neighbor[index]);
                 index--;
             }
             else if (openList.Contains(_neighbor[index]))
             {
-                Debug.Log("openList");
                 if (calculateMoveCost(_neighbor[index]) < (mapLists[i].nodes[j].MoveCost + 1 + _neighbor[index].Weight))
                 {
                     _neighbor.Remove(_neighbor[index]);
@@ -247,6 +260,7 @@ public class FindPath : MonoBehaviour
                 }
             }
         }
+        Debug.Log("neighbor Size: " + _neighbor.Count);
         foreach(MapNode node in _neighbor)
         {
             node.ParentNode = mapLists[i].nodes[j];

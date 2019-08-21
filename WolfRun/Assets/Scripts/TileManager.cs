@@ -10,13 +10,13 @@ public class MapList
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     protected static T instance = null;
+
     public static T Instance
     {
         get
         {
             instance = FindObjectOfType(typeof(T)) as T;
-
-            if(instance == null)
+            if (instance == null)
             {
                 instance = new GameObject("@" + typeof(T).ToString(),
                     typeof(T)).AddComponent<T>();
@@ -41,6 +41,12 @@ public class TileManager: Singleton<TileManager>
     [SerializeField] private int mapWidthSize;
     [SerializeField] private int mapHeightSize;
     [SerializeField] private List<MapNode> path;
+    [SerializeField] private MapNode summonPoint;
+    public MapNode SummonPoint
+    {
+        get { return summonPoint; }
+        set { summonPoint = value; }
+    }
     public List<MapNode> Path
     {
         get { return path; }
