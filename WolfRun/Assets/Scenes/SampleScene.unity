@@ -504,7 +504,7 @@ GameObject:
   - component: {fileID: 265145586}
   - component: {fileID: 265145585}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: '@TileManager'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -526,6 +526,7 @@ MonoBehaviour:
   mapWidthSize: 5
   mapHeightSize: 5
   path: []
+  summonPoint: {fileID: 0}
 --- !u!4 &265145586
 Transform:
   m_ObjectHideFlags: 0
@@ -2293,11 +2294,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c5b4d82e6e23524fbc50b9027c8b4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.02
+  speed: 0.5
   rotationSpeed: 10
   findPath: {fileID: 1175238739}
-  howlingTime: 60
-  summonWoflTime: 90
+  howlingTime: 3
+  summonWoflTime: 10
   currentNode: {fileID: 0}
   nextMoveNode: {fileID: 0}
   player: {fileID: 0}
@@ -3330,7 +3331,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.95976317, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3354,7 +3355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallState: 0
   weight: 0
-  isPath: 0
+  isPath: 1
   cost: 0
   moveCost: 0
   parentNode: {fileID: 0}

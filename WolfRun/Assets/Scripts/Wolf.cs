@@ -12,10 +12,13 @@ public class Wolf : MonoBehaviour
     [SerializeField] private float howlingTime;
     private float howlingCntTime;
 
+    private bool isSummon;
     [SerializeField] private float summonWoflTime;
     private float summonWolfCntTime;
 
     private float windTimer;
+
+    private float stunTimer;
 
     [SerializeField] private MapNode currentNode;
     public MapNode CurrentNode
@@ -42,7 +45,6 @@ public class Wolf : MonoBehaviour
     {
         summonWolfCntTime += Time.deltaTime;
         howlingCntTime += Time.deltaTime;
-
         if(isWait == false)//지금이 대기상태인지 나타냄
         {
             movePath();
@@ -60,10 +62,11 @@ public class Wolf : MonoBehaviour
         }
         else
         {
-            if(summonWolfCntTime > summonWoflTime)
+            if((summonWolfCntTime > summonWoflTime) && isSummon)
             {
                 summonWolfCntTime = 0;
                 summonWolf();
+                isSummon = false;
             }
         }
 
@@ -73,17 +76,67 @@ public class Wolf : MonoBehaviour
         Vector3 _direction = nextMoveNode.transform.position - currentNode.transform.position;
         currentNode = nextMoveNode;
         float eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
-        while (this.transform.position != currentNode.transform.position)
+        float posAngle = eulerAngle + 1;
+        float negAngle = eulerAngle - 1;
+        while (this.transform.rotation.eulerAngles.z != eulerAngle)
         {
-            //회전부터 하고 이동 시작, 이동은 정면으로 직진
-            /*
-             * this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), Time.deltaTime);
-            this.transform.position += this.transform.up * Time.deltaTime * speed;
-             */
-            this.transform.position = currentNode.transform.position;
+            //회전부터 시작, 회전이 끝나면 이동 시작
+            //this.transform.rotation = Quaternion.Euler(0,0,this.transform.rotation.eulerAngles.z + rotationSpeed * Time.deltaTime);
+            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), Time.deltaTime * rotationSpeed);
+            if(negAngle < 0)
+            {
+                if(((this.transform.rotation.eulerAngles.z-360)%360 > negAngle) && ((this.transform.rotation.eulerAngles.z-360)%360 < posAngle))
+                {
+                    this.transform.rotation = Quaternion.Euler(0,0,eulerAngle);
+                }
+            }
+            else
+            {
+                if ((this.transform.rotation.eulerAngles.z > negAngle) && (this.transform.rotation.eulerAngles.z < posAngle))
+                {
+                    this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
+                }
+            }
+            yield return null;
+        }
+        while(this.transform.position != currentNode.transform.position)
+        {
+            this.transform.position += this.transform.up * speed * Time.deltaTime;
+            if(TileManager.Instance.findCurrentNode(this.transform.position) == currentNode)
+            {
+                this.transform.position = currentNode.transform.position;
+            }
             yield return null;
         }
         TileManager.Instance.Path.Remove(currentNode);
+    }
+    private IEnumerator RotateWolf()
+    {
+        Vector3 _direction = TileManager.Instance.Path[0].transform.position - currentNode.transform.position;
+        float eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
+        float posAngle = eulerAngle + 1;
+        float negAngle = eulerAngle - 1;
+        while (this.transform.rotation.eulerAngles.z != eulerAngle)
+        {
+            //회전부터 시작, 회전이 끝나면 이동 시작
+            //this.transform.rotation = Quaternion.Euler(0,0,this.transform.rotation.eulerAngles.z + rotationSpeed * Time.deltaTime);
+            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), Time.deltaTime * rotationSpeed);
+            if (negAngle < 0)
+            {
+                if (((this.transform.rotation.eulerAngles.z - 360) % 360 > negAngle) && ((this.transform.rotation.eulerAngles.z - 360) % 360 < posAngle))
+                {
+                    this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
+                }
+            }
+            else
+            {
+                if ((this.transform.rotation.eulerAngles.z > negAngle) && (this.transform.rotation.eulerAngles.z < posAngle))
+                {
+                    this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
+                }
+            }
+            yield return null;
+        }
     }
     //대기상태가 되면 일정 시간을 주기로 경로를 재탐색, 새로운 경로가 나온다면 대기에서 벗어나 이동, 대기 중일 때 쿨타임마다 동료 소환
     private MapNode findPlayerNode()
@@ -120,6 +173,7 @@ public class Wolf : MonoBehaviour
                     if (TileManager.Instance.Path.Count == 0)
                     {
                         isWait = true;
+                        isSummon = true;
                     }
                     break;
                     //다른 타입은 고정된 것이기에 연산 필요 없음
@@ -133,6 +187,7 @@ public class Wolf : MonoBehaviour
         //맵 상에 있는 벽과 불타는 벽을 제거
         //제거에 연출 들어갈 수 있음
         Debug.Log("동료 소환");
+
     }
 
     private void blowWind(int weight, MapNode node)
@@ -146,7 +201,8 @@ public class Wolf : MonoBehaviour
     private IEnumerator windIdle(int time, MapNode node)
     {
         isWait = true;
-        while(windTimer < time)
+        yield return StartCoroutine(RotateWolf());
+        while (windTimer < time)
         {
             windTimer += Time.deltaTime;
             //여기서는 그냥 대기
@@ -168,20 +224,44 @@ public class Wolf : MonoBehaviour
     {
         //돼지와 일정거리 이상 떨어졌고 쿨타임이 돌아온 경우 호출
         //돼지를 일정시간 경직시킨다
+        //사운드 재생
     }
 
-    public void stun()
+    public void stun(int time)
     {
         //해당 함수가 호출되면 늑대가 일정시간 경직(대기)
         //아마 게임매니저에 있을 점수를 올려줘야 함
+        if(isWait == false)
+        {
+            isWait = true;
+            stunTimer = 0;
+            StartCoroutine(stunDuration(time));
+        }
+        
     }
-
-    public bool checkBack(Vector3 playerPos)
+    private IEnumerator stunDuration(int time)
+    {
+        while(stunTimer < time)
+        {
+            stunTimer += Time.deltaTime;
+            yield return null;
+        }
+        
+    }
+    public bool isBack()
     {
         //플레이어가 뒤편에 위치했는지 확인하는 함수
-        //플레이어 -> 늑대 방향 벡터와 Vector3.up의 각도를 사용
+        //플레이어 -> 늑대 방향 벡터와 this.transform.up의 각도를 사용
         //90~-90 사이의 각도라면 후방
         //아니면 전방에 위치
-        return true;
+        Vector3 _direction = this.transform.position - player.transform.position;
+        float _eulerAngle = Quaternion.FromToRotation(this.transform.up, _direction).eulerAngles.z;
+        if (_eulerAngle > 270)
+            _eulerAngle = _eulerAngle - 360;
+
+        if ((_eulerAngle < 90) && (_eulerAngle > -90))
+            return true;
+        else
+            return false;
     }
 }
