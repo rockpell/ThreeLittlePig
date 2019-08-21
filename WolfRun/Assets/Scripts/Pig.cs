@@ -12,11 +12,15 @@ public class Pig : MonoBehaviour
     private MapNode nowLookTile;
 
     private int fireResistance = 100;
-    private float moveSpeed = 4.0f;
+    private float moveSpeed = 5.0f;
     private float[] constructionSpeed = new float[3]; // 짚, 나무, 벽돌
 
     private float rotateValue;
-    Vector3 playerPosition;
+    private Vector3 playerPosition;
+    private Vector2 direction;
+
+    private Rigidbody2D rigid;
+    
 
     void Awake()
     {
@@ -28,18 +32,25 @@ public class Pig : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rigid = GetComponent<Rigidbody2D>();
+        if (rigid == null)
+            rigid = gameObject.AddComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        rigid.MovePosition(rigid.position + direction * moveSpeed * Time.fixedDeltaTime);
     }
 
     public void move(float deltaX, float deltaY)
     {
-        transform.Translate(deltaX * moveSpeed * Time.deltaTime, deltaY * moveSpeed * Time.deltaTime, 0);
+        if(deltaX != 0 && deltaY != 0)
+        {
+            deltaX = deltaX / Mathf.Sqrt(2);
+            deltaY = deltaY / Mathf.Sqrt(2);
+        }
+        direction = new Vector2(deltaX, deltaY);
     }
 
     public void lookMouse(Vector3 targetPosition)
