@@ -33,6 +33,7 @@ public class FindPath : MonoBehaviour
     {
         Debug.Log("start: "+startNode + "finish: "+finishNode);
         initializeCost();
+        TileManager.Instance.Path.Clear();
         openList.Clear();
         closeList.Clear();
 

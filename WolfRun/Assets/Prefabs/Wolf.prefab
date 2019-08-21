@@ -96,8 +96,11 @@ MonoBehaviour:
   speed: 0.5
   rotationSpeed: 10
   findPath: {fileID: 2329085119081600302}
-  howlingTime: 3
-  summonWoflTime: 10
+  howlingTime: 20
+  summonWolfTime: 20
+  summon: {fileID: 65830257852796487, guid: 04e75e03dce88664cba73ffcd81661d9, type: 3}
+  findPathTime: 5
+  nextMoveNode: {fileID: 0}
 --- !u!114 &2329085119081600302
 MonoBehaviour:
   m_ObjectHideFlags: 0

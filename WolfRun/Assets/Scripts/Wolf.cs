@@ -34,6 +34,7 @@ public class Wolf : MonoBehaviour
     [SerializeField] private MapNode nextMoveNode;
     private GameObject player;
 
+    private bool isMove;
     private bool isWait;
     void Start()
     {
@@ -66,7 +67,10 @@ public class Wolf : MonoBehaviour
             if(currentNode != nextMoveNode)
             {
                 //이동/회전 코드 적고 이동이 완료되면 Path에서 0번 제거
-                StartCoroutine(moveAndRotate());
+                if(isMove == false)
+                {
+                    StartCoroutine(moveAndRotate());
+                }
             }
         }
         else
@@ -82,6 +86,8 @@ public class Wolf : MonoBehaviour
     }
     private IEnumerator moveAndRotate()//회전부터 하고 끝나면 이동 시작해야 할듯
     {
+        isMove = true;
+        Debug.Log("move And Rotate");
         Vector3 _direction = nextMoveNode.transform.position - currentNode.transform.position;
         currentNode = nextMoveNode;
         float eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
@@ -113,11 +119,13 @@ public class Wolf : MonoBehaviour
             this.transform.position += this.transform.up * speed * Time.deltaTime;
             if(TileManager.Instance.findCurrentNode(this.transform.position) == currentNode)
             {
+                Debug.Log("offset");
                 this.transform.position = currentNode.transform.position;
             }
             yield return null;
         }
         TileManager.Instance.Path.Remove(currentNode);
+        isMove = false;
     }
     private IEnumerator RotateWolf()
     {
