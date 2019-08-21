@@ -478,9 +478,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallButtons:
-  - {fileID: 5374811703844813488}
-  - {fileID: 8391011313115533344}
-  - {fileID: 1776690145502498788}
+  - {fileID: 3589634413686730768}
+  - {fileID: 1153449281207330373}
+  - {fileID: 4961539896226745206}
   aliveTimeText: {fileID: 8738513114665028563}
   scoreText: {fileID: 4824893519775594353}
   cooldownImages:

@@ -20,18 +20,26 @@ public class GameManager : Singleton<GameManager>
 
     private bool isGameEnd = false;
 
+    void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
         wolves = new List<Wolf>();
 
         if(mainWolf != null)
             wolves.Add(mainWolf);
+
+        uiManager = UIManager.instance;
     }
 
     // Update is called once per frame
     void Update()
     {
         aliveTime += Time.deltaTime;
+
         uiManager.refreshAliveTimeText((int)aliveTime);
 
         player.progressCooldown(Time.deltaTime);

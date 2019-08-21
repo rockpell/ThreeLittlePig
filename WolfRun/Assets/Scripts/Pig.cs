@@ -22,7 +22,7 @@ public class Pig : MonoBehaviour
     private Vector2 direction;
 
     private Rigidbody2D rigid;
-    
+    private UIManager uiManager = null;
 
     void Awake()
     {
@@ -41,6 +41,10 @@ public class Pig : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         if (rigid == null)
             rigid = gameObject.AddComponent<Rigidbody2D>();
+
+        uiManager = UIManager.Instance;
+
+        NowConstructWallType = WallType.STRAW;
     }
 
     // Update is called once per frame
@@ -79,10 +83,8 @@ public class Pig : MonoBehaviour
         //}
 
         // 쿨타임 테스트용 코드
-        //if(leftCooldown[(int)WallType.STRAW] <= 0)
-        //    constructionWall(WallType.STRAW);
-        //constructionWall(WallType.WOOD);
-        //constructionWall(WallType.BRICK);
+        if (leftCooldown[(int)nowConstructWallType] <= 0)
+            constructionWall(nowConstructWallType);
     }
 
     private void constructionWall(WallType wallType)
@@ -153,6 +155,7 @@ public class Pig : MonoBehaviour
             _index = 2;
 
         nowConstructWallType = (WallType)_index;
+        uiManager.highlightButton((int)nowConstructWallType);
     }
 
     public void progressCooldown(float decreaseValue)
@@ -166,7 +169,11 @@ public class Pig : MonoBehaviour
 
     public WallType NowConstructWallType {
         get { return nowConstructWallType; }
-        set { nowConstructWallType = value; }
+        set 
+        {
+            nowConstructWallType = value;
+            uiManager.highlightButton((int)nowConstructWallType);
+        }
     }
 
     public int FireResistance {

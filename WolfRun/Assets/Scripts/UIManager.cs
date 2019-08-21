@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    [SerializeField] GameObject[] wallButtons;
+    [SerializeField] Button[] wallButtons;
     [SerializeField] Text aliveTimeText;
     [SerializeField] Text scoreText;
 
@@ -13,11 +13,9 @@ public class UIManager : MonoBehaviour
 
     private float deltaTime;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        GameManager.Instance.setUIMananger(this);
-
+        instance = this;
     }
 
     // Update is called once per frame
@@ -45,12 +43,15 @@ public class UIManager : MonoBehaviour
                 GameManager.Instance.Player.NowConstructWallType = WallType.BRICK;
                 break;
         }
-        highlightButton(index);
     }
 
-    private void highlightButton(int index)
+    public void highlightButton(int index)
     {
-
+        for(int i = 0; i < 3; i++)
+        {
+            wallButtons[i].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+        }
+        wallButtons[index].GetComponent<Image>().color = new Color(1, 0, 0, 1);
     }
 
     public void plusScoreEffect(int value)

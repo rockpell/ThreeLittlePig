@@ -4,19 +4,13 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField] private Pig nowPlayer;
+    private Pig nowPlayer;
 
     private float wheelValue = 0;
 
-    // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
-        if (nowPlayer == null)
-        {
-            nowPlayer = GameObject.FindObjectOfType<Pig>();
-            if(nowPlayer == null)
-                Debug.LogError("nowPlayer is null");
-        }
+        nowPlayer = GameManager.Instance.Player;
     }
 
     // Update is called once per frame
@@ -31,23 +25,38 @@ public class InputManager : MonoBehaviour
 
         wheelValue = Input.GetAxisRaw("Mouse ScrollWheel");
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            nowPlayer.constructionWall();
-            nowPlayer.dressingUp();
+            nowPlayer.NowConstructWallType = WallType.STRAW;
         }
-        else if (Input.GetKeyDown(KeyCode.Mouse1))
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            nowPlayer.destroyWall();
+            nowPlayer.NowConstructWallType = WallType.WOOD;
         }
-        else if (Input.GetKeyDown(KeyCode.F))
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            nowPlayer.fireWall();
-        }
-        else if(wheelValue != 0) // 밑으로 휠 -값 위로 휠 +값
-        {
-            nowPlayer.wheelNowConstructWallType(wheelValue);
+            nowPlayer.NowConstructWallType = WallType.BRICK;
         }
 
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) // 마우스가 UI 위에 없을때만
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                nowPlayer.constructionWall();
+                nowPlayer.dressingUp();
+            }
+            else if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                nowPlayer.destroyWall();
+            }
+            else if (Input.GetKeyDown(KeyCode.F))
+            {
+                nowPlayer.fireWall();
+            }
+            else if (wheelValue != 0) // 밑으로 휠 -값 위로 휠 +값
+            {
+                nowPlayer.wheelNowConstructWallType(wheelValue);
+            }
+        }
     }
 }
