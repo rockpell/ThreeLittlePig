@@ -7,17 +7,28 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] GameObject[] wallButtons;
     [SerializeField] Text aliveTimeText;
+    [SerializeField] Text scoreText;
+
+    [SerializeField] private Image[] cooldownImages;
+
+    private float deltaTime;
 
     // Start is called before the first frame update
     void Start()
     {
         GameManager.Instance.setUIMananger(this);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        deltaTime += Time.deltaTime;
+        if(deltaTime > 0.2f)
+        {
+            deltaTime -= 0.2f;
+            cooldownUI();
+        }
     }
 
     public void selectWallTypeButton(int index)
@@ -57,6 +68,27 @@ public class UIManager : MonoBehaviour
                 break;
             case GameEnding.MEAT:
                 break;
+        }
+    }
+
+    public void refreshAliveTimeText(int time)
+    {
+        aliveTimeText.text = time.ToString();
+    }
+
+    private void cooldownUI()
+    {
+        Pig _player = GameManager.Instance.Player;
+        for (int i = 0; i < 3; i++)
+        {
+            if(_player.getLeftCooldown(i) == 0)
+            {
+                cooldownImages[i].fillAmount = 0;
+            }
+            else
+            {
+                cooldownImages[i].fillAmount = _player.getLeftCooldown(i) / _player.getCooldown(i);
+            }
         }
     }
 }

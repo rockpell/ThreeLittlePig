@@ -32,6 +32,9 @@ public class GameManager : Singleton<GameManager>
     void Update()
     {
         aliveTime += Time.deltaTime;
+        uiManager.refreshAliveTimeText((int)aliveTime);
+
+        player.progressCooldown(Time.deltaTime);
     }
 
     public void plusScore(ScoreEvent scoreEvent)
@@ -115,4 +118,5 @@ public class GameManager : Singleton<GameManager>
     {
         this.uiManager = uiManager;
     }
+
 }

@@ -7,13 +7,15 @@ public class Pig : MonoBehaviour
     [SerializeField] Transform spriteObject;
 
     private WallType nowConstructWallType = WallType.STRAW;
-    private WallType nowLookTileWallType = WallType.NONE; // 타일을 가져오는게 나을지도
 
     private MapNode nowLookTile;
 
     private int fireResistance = 100;
     private float moveSpeed = 5.0f;
-    private float[] constructionSpeed = new float[3]; // 짚, 나무, 벽돌
+
+    private float[] constructionTime = new float[3]; // 짚, 나무, 벽돌 건설하는데 걸리는 시간
+    private float[] cooldownWall = new float[3]; // 짚, 나무 벽돌 건설 쿨타임
+    private float[] leftCooldown = new float[3]; // 남은 쿨타임
 
     private float rotateValue;
     private Vector3 playerPosition;
@@ -24,9 +26,13 @@ public class Pig : MonoBehaviour
 
     void Awake()
     {
-        constructionSpeed[0] = 3.0f;
-        constructionSpeed[1] = 2.0f;
-        constructionSpeed[2] = 1.0f;
+        constructionTime[0] = 1.0f;
+        constructionTime[1] = 2.0f;
+        constructionTime[2] = 3.0f;
+
+        cooldownWall[0] = 1.0f;
+        cooldownWall[1] = 2.0f;
+        cooldownWall[2] = 3.0f;
     }
 
     // Start is called before the first frame update
@@ -66,10 +72,17 @@ public class Pig : MonoBehaviour
     {
         Debug.Log("constructionWall");
         // 늑대가 없고 풀타일일 경우 벽 생성가능(아무것도 없을때)
-        if(nowLookTileWallType == WallType.NONE)
-        {
-            constructionWall(nowConstructWallType);
-        }
+        //if (nowLookTile.WallState == WallType.NONE)
+        //{
+        //    if(leftCooldown[(int)nowConstructWallType] <= 0)
+        //        constructionWall(nowConstructWallType);
+        //}
+
+        // 쿨타임 테스트용 코드
+        //if(leftCooldown[(int)WallType.STRAW] <= 0)
+        //    constructionWall(WallType.STRAW);
+        //constructionWall(WallType.WOOD);
+        //constructionWall(WallType.BRICK);
     }
 
     private void constructionWall(WallType wallType)
@@ -77,10 +90,13 @@ public class Pig : MonoBehaviour
         switch (wallType)
         {
             case WallType.STRAW:
+                leftCooldown[0] = cooldownWall[0];
                 break;
             case WallType.WOOD:
+                leftCooldown[1] = cooldownWall[1];
                 break;
             case WallType.BRICK:
+                leftCooldown[2] = cooldownWall[2];
                 break;
         }
     }
@@ -88,7 +104,7 @@ public class Pig : MonoBehaviour
     public void destroyWall() // 나무, 벽돌 벽일 경우에만 작동 가능
     {
         Debug.Log("destroyWall");
-        switch (nowLookTileWallType)
+        switch (nowLookTile.WallState)
         {
             case WallType.WOOD:
                 break;
@@ -100,7 +116,7 @@ public class Pig : MonoBehaviour
     public void fireWall() // 짚, 나무 벽돌일 경우에만 작동 가능
     {
         Debug.Log("fireWall");
-        switch (nowLookTileWallType)
+        switch (nowLookTile.WallState)
         {
             case WallType.STRAW:
                 break;
@@ -139,6 +155,15 @@ public class Pig : MonoBehaviour
         nowConstructWallType = (WallType)_index;
     }
 
+    public void progressCooldown(float decreaseValue)
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            if (leftCooldown[i] > 0)
+                leftCooldown[i] -= decreaseValue;
+        }
+    }
+
     public WallType NowConstructWallType {
         get { return nowConstructWallType; }
         set { nowConstructWallType = value; }
@@ -147,5 +172,15 @@ public class Pig : MonoBehaviour
     public int FireResistance {
         get { return fireResistance; }
         set { fireResistance = value; }
+    }
+
+    public float getLeftCooldown(int index)
+    {
+        return leftCooldown[index];
+    }
+
+    public float getCooldown(int index)
+    {
+        return cooldownWall[index];
     }
 }
