@@ -124,8 +124,11 @@ public class Pig : MonoBehaviour
             // 늑대가 없고 풀타일일 경우 벽 생성가능(아무것도 없을때)
             if (nowLookTile.WallState == WallType.NONE)
             {
-                if (leftCooldown[(int)nowConstructWallType] <= 0)
-                    tryConstructionWall(nowConstructWallType);
+                if(gameManager.Wolves[0].CurrentNode != nowLookTile)
+                {
+                    if (leftCooldown[(int)nowConstructWallType] <= 0)
+                        tryConstructionWall(nowConstructWallType);
+                }
             }
 
             // 쿨타임 테스트용 코드

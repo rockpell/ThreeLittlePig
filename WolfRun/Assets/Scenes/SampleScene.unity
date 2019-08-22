@@ -2736,7 +2736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d460f95d155ae414697547207b3b13e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainWolf: {fileID: 0}
+  mainWolf: {fileID: 752748040}
   player: {fileID: 114702909}
 --- !u!4 &210016349
 Transform:
@@ -10430,6 +10430,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 928704365}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &752748040 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4619732985097838206, guid: 87bf9b34162d5dc448955da7546d9a58,
+    type: 3}
+  m_PrefabInstance: {fileID: 338921297}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c5b4d82e6e23524fbc50b9027c8b4d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &754300483
 PrefabInstance:
   m_ObjectHideFlags: 0
