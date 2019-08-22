@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] GameObject tutorialObject;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +16,11 @@ public class MainMenu : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void showTutorial()
+    {
+        tutorialObject.SetActive(true);
     }
 
     public void gameStart()
