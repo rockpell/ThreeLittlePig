@@ -122,15 +122,15 @@ public class Pig : MonoBehaviour
         {
             Debug.Log("constructionWall");
             // 늑대가 없고 풀타일일 경우 벽 생성가능(아무것도 없을때)
-            //if (nowLookTile.WallState == WallType.NONE)
-            //{
-            //    if(leftCooldown[(int)nowConstructWallType] <= 0)
-            //        tryConstructionWall(nowConstructWallType);
-            //}
+            if (nowLookTile.WallState == WallType.NONE)
+            {
+                if (leftCooldown[(int)nowConstructWallType] <= 0)
+                    tryConstructionWall(nowConstructWallType);
+            }
 
             // 쿨타임 테스트용 코드
-            if (leftCooldown[(int)nowConstructWallType] <= 0)
-                tryConstructionWall(nowConstructWallType);
+            //if (leftCooldown[(int)nowConstructWallType] <= 0)
+            //    tryConstructionWall(nowConstructWallType);
         }
     }
 
@@ -210,8 +210,8 @@ public class Pig : MonoBehaviour
         if (!isActing)
         {
             Debug.Log("dressingUp");
-            gameManager.DressUpCount += 1;
-            gameManager.plusScore(ScoreEvent.DRESSUP);
+            //gameManager.DressUpCount += 1;
+            //gameManager.plusScore(ScoreEvent.DRESSUP);
         }
     }
 
