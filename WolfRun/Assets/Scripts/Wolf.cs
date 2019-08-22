@@ -54,7 +54,7 @@ public class Wolf : MonoBehaviour
         if(findPathCntTime > findPathTime)
         {
             findPathCntTime = 0;
-            findPath.initializePath(currentNode, findPlayerNode());
+            StartCoroutine(findRoute(currentNode));
         }
         if(isWait == false)//지금이 대기상태인지 나타냄
         {
@@ -84,6 +84,11 @@ public class Wolf : MonoBehaviour
         }
 
     }
+    private IEnumerator findRoute(MapNode node)
+    {
+        findPath.initializePath(node, findPlayerNode());
+        yield return null;
+    }
     private IEnumerator moveAndRotate()//회전부터 하고 끝나면 이동 시작해야 할듯
     {
         isMove = true;
@@ -93,16 +98,29 @@ public class Wolf : MonoBehaviour
         float eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
         float posAngle = eulerAngle + 1;
         float negAngle = eulerAngle - 1;
+        float originAngle = this.transform.rotation.eulerAngles.z;
+        Debug.Log(eulerAngle);
         while (this.transform.rotation.eulerAngles.z != eulerAngle)
         {
             //회전부터 시작, 회전이 끝나면 이동 시작
             //this.transform.rotation = Quaternion.Euler(0,0,this.transform.rotation.eulerAngles.z + rotationSpeed * Time.deltaTime);
+            //180을 기준으로 180보다 크다면 -360을 수행하고 작으면 수행하지 않음
             this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), Time.deltaTime * rotationSpeed);
             if(negAngle < 0)
             {
-                if(((this.transform.rotation.eulerAngles.z-360)%360 > negAngle) && ((this.transform.rotation.eulerAngles.z-360)%360 < posAngle))
+                if(originAngle > 180)
                 {
-                    this.transform.rotation = Quaternion.Euler(0,0,eulerAngle);
+                    if (((this.transform.rotation.eulerAngles.z - 360) % 360 > negAngle) && ((this.transform.rotation.eulerAngles.z - 360) % 360 < posAngle))
+                    {
+                        this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
+                    }
+                }
+                else
+                {
+                    if ((this.transform.rotation.eulerAngles.z > negAngle) && (this.transform.rotation.eulerAngles.z < posAngle))
+                    {
+                        this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
+                    }
                 }
             }
             else
