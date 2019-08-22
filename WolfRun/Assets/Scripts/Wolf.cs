@@ -140,6 +140,11 @@ public class Wolf : MonoBehaviour
                 Debug.Log("offset");
                 this.transform.position = currentNode.transform.position;
             }
+            if(Vector3.Distance(this.transform.position, currentNode.transform.position) > 1.9)
+            {
+                Debug.Log("error");
+                this.transform.position = currentNode.transform.position;
+            }
             yield return null;
         }
         TileManager.Instance.Path.Remove(currentNode);
