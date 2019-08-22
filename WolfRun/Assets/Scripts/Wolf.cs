@@ -290,7 +290,15 @@ public class Wolf : MonoBehaviour
         //사운드 재생
     }
 
-    public void stun(int time)
+    public void checkBrokenWall(MapNode node)
+    {
+        //stun(time);
+    }
+    public void grandmaCloth()
+    {
+        //stun(time);
+    }
+    private void stun(int time)
     {
         //해당 함수가 호출되면 늑대가 일정시간 경직(대기)
         //아마 게임매니저에 있을 점수를 올려줘야 함
