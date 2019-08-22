@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6864058855275497838}
   - component: {fileID: 8165762212702614943}
   - component: {fileID: 2825484270903301640}
+  - component: {fileID: -4921605766833240906}
   m_Layer: 0
   m_Name: Tile_stone
   m_TagString: Tile
@@ -101,3 +102,29 @@ MonoBehaviour:
   normalSprite: {fileID: 0}
   fireSprite: {fileID: 0}
   wallSprite: []
+--- !u!61 &-4921605766833240906
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6849566769544542109}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.28, y: 1.28}
+    newSize: {x: 1.28, y: 1.28}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.28, y: 1.28}
+  m_EdgeRadius: 0
