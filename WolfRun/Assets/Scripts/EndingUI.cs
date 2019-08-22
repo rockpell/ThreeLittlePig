@@ -124,7 +124,7 @@ public class EndingUI : MonoBehaviour
 
     public void restartButton()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("GameScene");
         //StartCoroutine(LoadYourAsyncScene());
     }
 
@@ -137,7 +137,7 @@ public class EndingUI : MonoBehaviour
     {
         Scene currentScene = SceneManager.GetActiveScene();
 
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("SampleScene", LoadSceneMode.Additive);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
 
         // Wait until the last operation fully loads to return anything
         while (!asyncLoad.isDone)
