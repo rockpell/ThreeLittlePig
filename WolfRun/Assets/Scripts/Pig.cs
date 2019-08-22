@@ -12,7 +12,7 @@ public class Pig : MonoBehaviour
     private MapNode nowLookTile = null;
 
     private int fireResistance = 100;
-    private float moveSpeed = 5.0f;
+    private float moveSpeed = 4f;
 
     private float[] constructionTime = new float[3]; // 짚, 나무, 벽돌 건설하는데 걸리는 시간
     private float[] cooldownWall = new float[3]; // 짚, 나무 벽돌 건설 쿨타임
@@ -219,7 +219,6 @@ public class Pig : MonoBehaviour
                 gameManager.DressUpCount += 1;
                 gameManager.plusScore(ScoreEvent.DRESSUP);
             }
-
         }
     }
 
