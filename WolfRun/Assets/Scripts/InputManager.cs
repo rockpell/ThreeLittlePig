@@ -51,7 +51,7 @@ public class InputManager : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.F))
             {
-                nowPlayer.fireWall();
+                nowPlayer.actFireWall();
             }
             else if (wheelValue != 0) // 밑으로 휠 -값 위로 휠 +값
             {

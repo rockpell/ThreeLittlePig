@@ -9,7 +9,7 @@ public class Pig : MonoBehaviour
 
     private WallType nowConstructWallType = WallType.STRAW;
 
-    private MapNode nowLookTile;
+    private MapNode nowLookTile = null;
 
     private int fireResistance = 100;
     private float moveSpeed = 5.0f;
@@ -17,6 +17,9 @@ public class Pig : MonoBehaviour
     private float[] constructionTime = new float[3]; // 짚, 나무, 벽돌 건설하는데 걸리는 시간
     private float[] cooldownWall = new float[3]; // 짚, 나무 벽돌 건설 쿨타임
     private float[] leftCooldown = new float[3]; // 남은 쿨타임
+
+    private float leftActTime = 0;
+    private bool isActing = false;
 
     private float rotateValue;
     private Vector3 playerPosition;
@@ -60,6 +63,20 @@ public class Pig : MonoBehaviour
         {
             UIManager.Instance.showFireText(false);
         }
+
+        if (isActing)
+        {
+            leftActTime -= Time.deltaTime;
+            if (leftActTime < 0)
+            {
+                if (nowConstructWallType != WallType.FIRE)
+                    constructionWall(nowConstructWallType);
+                else
+                    fireWall();
+                isActing = false;
+                uiManager.showActingText(false);
+            }
+        }
     }
 
     void FixedUpdate()
@@ -69,36 +86,54 @@ public class Pig : MonoBehaviour
 
     public void move(float deltaX, float deltaY)
     {
-        if(deltaX != 0 && deltaY != 0)
+        if (!isActing)
         {
-            deltaX = deltaX / Mathf.Sqrt(2);
-            deltaY = deltaY / Mathf.Sqrt(2);
+            if (deltaX != 0 && deltaY != 0)
+            {
+                deltaX = deltaX / Mathf.Sqrt(2);
+                deltaY = deltaY / Mathf.Sqrt(2);
+            }
+            direction = new Vector2(deltaX, deltaY);
         }
-        direction = new Vector2(deltaX, deltaY);
+        else
+        {
+            direction = new Vector2(0, 0);
+        }
     }
 
     public void lookMouse(Vector3 targetPosition)
     {
-        playerPosition = spriteObject.position;
-        Vector2 direction = new Vector2(targetPosition.x - playerPosition.x, targetPosition.y - playerPosition.y);
-        float rad = Mathf.Atan2(direction.x, direction.y);
-        rotateValue = (rad * 180) / Mathf.PI;
-        spriteObject.localEulerAngles = new Vector3(0, 0, -rotateValue);
+        if (!isActing)
+        {
+            playerPosition = spriteObject.position;
+            Vector2 direction = new Vector2(targetPosition.x - playerPosition.x, targetPosition.y - playerPosition.y);
+            float rad = Mathf.Atan2(direction.x, direction.y);
+            rotateValue = (rad * 180) / Mathf.PI;
+            spriteObject.localEulerAngles = new Vector3(0, 0, -rotateValue);
+        }
     }
 
     public void constructionWall()
     {
-        Debug.Log("constructionWall");
-        // 늑대가 없고 풀타일일 경우 벽 생성가능(아무것도 없을때)
-        //if (nowLookTile.WallState == WallType.NONE)
-        //{
-        //    if(leftCooldown[(int)nowConstructWallType] <= 0)
-        //        constructionWall(nowConstructWallType);
-        //}
+        if (!isActing)
+        {
+            Debug.Log("constructionWall");
+            // 늑대가 없고 풀타일일 경우 벽 생성가능(아무것도 없을때)
+            //if (nowLookTile.WallState == WallType.NONE)
+            //{
+            //    if(leftCooldown[(int)nowConstructWallType] <= 0)
+            //        tryConstructionWall(nowConstructWallType);
+            //}
 
-        // 쿨타임 테스트용 코드
-        if (leftCooldown[(int)nowConstructWallType] <= 0)
-            constructionWall(nowConstructWallType);
+            // 쿨타임 테스트용 코드
+            if (leftCooldown[(int)nowConstructWallType] <= 0)
+                tryConstructionWall(nowConstructWallType);
+        }
+    }
+
+    private void tryConstructionWall(WallType wallType)
+    {
+        setActing(constructionTime[(int)wallType]);
     }
 
     private void constructionWall(WallType wallType)
@@ -107,44 +142,65 @@ public class Pig : MonoBehaviour
         {
             case WallType.STRAW:
                 leftCooldown[0] = cooldownWall[0];
+                if(nowLookTile != null)
+                    nowLookTile.changeState(WallType.STRAW);
                 //gameManager.plusScore(ScoreEvent.STUN);
                 break;
             case WallType.WOOD:
                 leftCooldown[1] = cooldownWall[1];
+                if (nowLookTile != null)
+                    nowLookTile.changeState(WallType.WOOD);
                 break;
             case WallType.BRICK:
                 leftCooldown[2] = cooldownWall[2];
+                if (nowLookTile != null)
+                    nowLookTile.changeState(WallType.BRICK);
                 break;
         }
     }
 
     public void destroyWall() // 나무, 벽돌 벽일 경우에만 작동 가능
     {
-        Debug.Log("destroyWall");
-        switch (nowLookTile.WallState)
+        if (!isActing)
         {
-            case WallType.WOOD:
-                break;
-            case WallType.BRICK:
-                break;
+            Debug.Log("destroyWall");
+            if (nowLookTile != null)
+            {
+                if(nowLookTile.WallState == WallType.WOOD || nowLookTile.WallState == WallType.BRICK)
+                    nowLookTile.changeState(WallType.NONE);
+            }
         }
     }
 
-    public void fireWall() // 짚, 나무 벽돌일 경우에만 작동 가능
+    public void actFireWall() // 짚, 나무 벽일 경우에만 작동 가능
+    {
+        if (!isActing)
+        {
+            if(nowLookTile.WallState == WallType.STRAW || nowLookTile.WallState == WallType.WOOD)
+            {
+                tryFireWall();
+            }
+        }
+    }
+
+    private void tryFireWall()
+    {
+        setActing(1);
+    }
+
+    private void fireWall()
     {
         Debug.Log("fireWall");
-        switch (nowLookTile.WallState)
-        {
-            case WallType.STRAW:
-                break;
-            case WallType.WOOD:
-                break;
-        }
+        if (nowLookTile != null)
+            nowLookTile.changeState(WallType.FIRE);
     }
 
     public void dressingUp() // 늑대한테 옷 입히기
     {
-        Debug.Log("dressingUp");
+        if (!isActing)
+        {
+            Debug.Log("dressingUp");
+        }
     }
 
     public void setNowLookTile(MapNode tile)
@@ -185,9 +241,12 @@ public class Pig : MonoBehaviour
         get { return nowConstructWallType; }
         set 
         {
-            nowConstructWallType = value;
-            uiManager.highlightButton((int)nowConstructWallType);
-            spriteObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)nowConstructWallType];
+            if (!isActing)
+            {
+                nowConstructWallType = value;
+                uiManager.highlightButton((int)nowConstructWallType);
+                spriteObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)nowConstructWallType];
+            }
         }
     }
 
@@ -209,5 +268,12 @@ public class Pig : MonoBehaviour
     public Vector3 getFireTextPosition()
     {
         return transform.GetChild(1).position;
+    }
+
+    private void setActing(float burstTime)
+    {
+        isActing = true;
+        uiManager.showActingText(true, nowConstructWallType);
+        leftActTime = burstTime;
     }
 }

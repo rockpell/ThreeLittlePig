@@ -14,6 +14,7 @@ public class UIManager : Singleton<UIManager>
 
     [SerializeField] private GameObject fireTextObject;
     [SerializeField] private GameObject endingObject;
+    [SerializeField] private GameObject actingTextObject;
 
     private float deltaTime;
 
@@ -205,6 +206,28 @@ public class UIManager : Singleton<UIManager>
         if (value)
         {
             fireTextObject.transform.position = playerFireTextToScreenPosition();
+        }
+    }
+
+    public void showActingText(bool value, WallType nowWallType = WallType.NONE)
+    {
+        if (actingTextObject.activeSelf != value)
+        {
+            if (value)
+            {
+                string _actText;
+                if(nowWallType == WallType.FIRE)
+                {
+                    _actText = "벽에 불을 붙히는 중";
+                }
+                else
+                {
+                    _actText = "벽을 만드는 중";
+                }
+
+                actingTextObject.transform.GetChild(0).GetComponent<Text>().text = _actText;
+            }
+            actingTextObject.SetActive(value);
         }
     }
 
