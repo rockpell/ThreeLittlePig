@@ -31,7 +31,6 @@ public class FindPath : MonoBehaviour
     }
     public void initializePath(MapNode startNode, MapNode finishNode)
     {
-        Debug.Log("start: "+startNode + "finish: "+finishNode);
         initializeCost();
         TileManager.Instance.Path.Clear();
         openList.Clear();
@@ -132,20 +131,6 @@ public class FindPath : MonoBehaviour
         int j = 0;
 
         TileManager.Instance.findNodeIndex(start, out i, out j);
-        /*
-        foreach (MapList list in mapLists)
-        {
-            foreach (MapNode node in list.nodes)
-            {
-                if (start == node)
-                {
-                    i = mapLists.IndexOf(list);
-                    j = list.nodes.IndexOf(node);
-                }
-            }
-        }
-        */
-        //Debug.Log("i: " + i + " j: " + j);
         List<MapNode> _neighbor = new List<MapNode>();
         if(i > 0)
         {
@@ -155,33 +140,52 @@ public class FindPath : MonoBehaviour
                 {
                     if(j<mapLists[i].nodes.Count-1)
                     {
+                        //i, j가 범위 내에 있음 - 모든 경로 가능 - 8방향
+                        if (mapLists[i - 1].nodes[j-1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j-1]);
                         if (mapLists[i - 1].nodes[j].IsPath)
                             _neighbor.Add(mapLists[i - 1].nodes[j]);
-                        if (mapLists[i + 1].nodes[j].IsPath)
-                            _neighbor.Add(mapLists[i + 1].nodes[j]);
+                        if (mapLists[i - 1].nodes[j+1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j+1]);
                         if (mapLists[i].nodes[j - 1].IsPath)
                             _neighbor.Add(mapLists[i].nodes[j - 1]);
                         if (mapLists[i].nodes[j + 1].IsPath)
                             _neighbor.Add(mapLists[i].nodes[j + 1]);
+                        if (mapLists[i + 1].nodes[j-1].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j-1]);
+                        if (mapLists[i + 1].nodes[j].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j]);
+                        if (mapLists[i + 1].nodes[j + 1].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j + 1]);
                     }
                     else
                     {
+                        //j +방향 불가능 - 5방향
+                        if (mapLists[i - 1].nodes[j-1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j-1]);
                         if (mapLists[i - 1].nodes[j].IsPath)
                             _neighbor.Add(mapLists[i - 1].nodes[j]);
-                        if (mapLists[i + 1].nodes[j].IsPath)
-                            _neighbor.Add(mapLists[i + 1].nodes[j]);
                         if (mapLists[i].nodes[j - 1].IsPath)
                             _neighbor.Add(mapLists[i].nodes[j - 1]);
+                        if (mapLists[i + 1].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j - 1]);
+                        if (mapLists[i + 1].nodes[j].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j]);
                     }
                 }
                 else
                 {
+                    //j -방향 불가능 - 5방향
                     if (mapLists[i - 1].nodes[j].IsPath)
                         _neighbor.Add(mapLists[i - 1].nodes[j]);
-                    if (mapLists[i + 1].nodes[j].IsPath)
-                        _neighbor.Add(mapLists[i + 1].nodes[j]);
+                    if (mapLists[i - 1].nodes[j+1].IsPath)
+                        _neighbor.Add(mapLists[i - 1].nodes[j+1]);
                     if (mapLists[i].nodes[j + 1].IsPath)
                         _neighbor.Add(mapLists[i].nodes[j + 1]);
+                    if (mapLists[i + 1].nodes[j].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j]);
+                    if (mapLists[i + 1].nodes[j+1].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j+1]);
                 }
             }
             else
@@ -190,8 +194,13 @@ public class FindPath : MonoBehaviour
                 {
                     if(j<mapLists[i].nodes.Count-1)
                     {
+                        //i가 범위에 걸쳤음 -> +방향 불가능 - 5방향
+                        if (mapLists[i - 1].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j - 1]);
                         if (mapLists[i - 1].nodes[j].IsPath)
                             _neighbor.Add(mapLists[i - 1].nodes[j]);
+                        if (mapLists[i - 1].nodes[j + 1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j + 1]);
                         if (mapLists[i].nodes[j - 1].IsPath)
                             _neighbor.Add(mapLists[i].nodes[j - 1]);
                         if (mapLists[i].nodes[j + 1].IsPath)
@@ -199,6 +208,9 @@ public class FindPath : MonoBehaviour
                     }
                     else
                     {
+                        //i, j가 범위에 걸침 -> +방향 불가능
+                        if (mapLists[i - 1].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j - 1]);
                         if (mapLists[i - 1].nodes[j].IsPath)
                             _neighbor.Add(mapLists[i - 1].nodes[j]);
                         if (mapLists[i].nodes[j - 1].IsPath)
@@ -207,8 +219,11 @@ public class FindPath : MonoBehaviour
                 }
                 else
                 {
+                    //i는 +방향 불가능, j는 -방향 불가능
                     if (mapLists[i - 1].nodes[j].IsPath)
                         _neighbor.Add(mapLists[i - 1].nodes[j]);
+                    if (mapLists[i - 1].nodes[j + 1].IsPath)
+                        _neighbor.Add(mapLists[i - 1].nodes[j + 1]);
                     if (mapLists[i].nodes[j + 1].IsPath)
                         _neighbor.Add(mapLists[i].nodes[j + 1]);
                 }
@@ -220,27 +235,38 @@ public class FindPath : MonoBehaviour
             {
                 if(j<mapLists[i].nodes.Count-1)
                 {
-                    if (mapLists[i + 1].nodes[j].IsPath)
-                        _neighbor.Add(mapLists[i + 1].nodes[j]);
+                    //i는 -방향 불가능
                     if (mapLists[i].nodes[j - 1].IsPath)
                         _neighbor.Add(mapLists[i].nodes[j - 1]);
                     if (mapLists[i].nodes[j + 1].IsPath)
                         _neighbor.Add(mapLists[i].nodes[j + 1]);
+                    if (mapLists[i + 1].nodes[j - 1].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j - 1]);
+                    if (mapLists[i + 1].nodes[j].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j]);
+                    if (mapLists[i + 1].nodes[j + 1].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j + 1]);
                 }
                 else
                 {
-                    if (mapLists[i + 1].nodes[j].IsPath)
-                        _neighbor.Add(mapLists[i + 1].nodes[j]);
+                    //i -방향 불가능, j는 +방향 불가능
                     if (mapLists[i].nodes[j - 1].IsPath)
                         _neighbor.Add(mapLists[i].nodes[j - 1]);
+                    if (mapLists[i + 1].nodes[j - 1].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j - 1]);
+                    if (mapLists[i + 1].nodes[j].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j]);
                 }
             }
             else
             {
-                if (mapLists[i + 1].nodes[j].IsPath)
-                    _neighbor.Add(mapLists[i + 1].nodes[j]);
+                //i, j -방향 불가능
                 if (mapLists[i].nodes[j + 1].IsPath)
                     _neighbor.Add(mapLists[i].nodes[j + 1]);
+                if (mapLists[i + 1].nodes[j].IsPath)
+                    _neighbor.Add(mapLists[i + 1].nodes[j]);
+                if (mapLists[i + 1].nodes[j + 1].IsPath)
+                    _neighbor.Add(mapLists[i + 1].nodes[j + 1]);
             }
         }
         for(int index = 0; index < _neighbor.Count; index++)

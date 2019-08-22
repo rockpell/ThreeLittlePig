@@ -24,7 +24,7 @@ public class Wolf : MonoBehaviour
 
     private float stunTimer;
 
-    private MapNode currentNode;
+    [SerializeField] private MapNode currentNode;
     public MapNode CurrentNode
     {
         get { return currentNode; }
@@ -51,6 +51,12 @@ public class Wolf : MonoBehaviour
         summonWolfCntTime += Time.deltaTime;
         howlingCntTime += Time.deltaTime;
         findPathCntTime += Time.deltaTime;
+
+        if(TileManager.Instance.Path.Count > 0)
+        {
+            isWait = false;
+            //currentNode = TileManager.Instance.findCurrentNode(this.transform.position);
+        }
         if(findPathCntTime > findPathTime)
         {
             findPathCntTime = 0;
@@ -58,24 +64,28 @@ public class Wolf : MonoBehaviour
         }
         if(isWait == false)//지금이 대기상태인지 나타냄
         {
+            Debug.Log("no Idle");
             movePath();
             //현재 타일과 이동 할 타일 비교, 같으면 동작 안함
             if(nextMoveNode == null)
             {
                 return;
             }
-            if(currentNode != nextMoveNode)
+            if (TileManager.Instance.findCurrentNode(this.transform.position) != nextMoveNode)
             {
                 //이동/회전 코드 적고 이동이 완료되면 Path에서 0번 제거
-                if(isMove == false)
+                Debug.Log("Moving Check");
+                if (isMove == false)
                 {
+                    Debug.Log("Moving");
                     StartCoroutine(moveAndRotate());
                 }
             }
         }
         else
         {
-            if((summonWolfCntTime > summonWolfTime) && isSummon)
+            Debug.Log("Idle");
+            if ((summonWolfCntTime > summonWolfTime) && isSummon)
             {
                 summonWolfCntTime = 0;
                 summonWolf();
@@ -96,87 +106,30 @@ public class Wolf : MonoBehaviour
         Vector3 _direction = nextMoveNode.transform.position - currentNode.transform.position;
         currentNode = nextMoveNode;
         float eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
-        float posAngle = eulerAngle + 1;
-        float negAngle = eulerAngle - 1;
-        float originAngle = this.transform.rotation.eulerAngles.z;
-        Debug.Log(eulerAngle);
-        while (this.transform.rotation.eulerAngles.z != eulerAngle)
+
+        while(Vector3.Distance(this.transform.position, currentNode.transform.position) > 0.1f)
         {
-            //회전부터 시작, 회전이 끝나면 이동 시작
-            //this.transform.rotation = Quaternion.Euler(0,0,this.transform.rotation.eulerAngles.z + rotationSpeed * Time.deltaTime);
-            //180을 기준으로 180보다 크다면 -360을 수행하고 작으면 수행하지 않음
-            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), Time.deltaTime * rotationSpeed);
-            if(negAngle < 0)
-            {
-                if(originAngle > 180)
-                {
-                    if (((this.transform.rotation.eulerAngles.z - 360) % 360 > negAngle) && ((this.transform.rotation.eulerAngles.z - 360) % 360 < posAngle))
-                    {
-                        this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
-                    }
-                }
-                else
-                {
-                    if ((this.transform.rotation.eulerAngles.z > negAngle) && (this.transform.rotation.eulerAngles.z < posAngle))
-                    {
-                        this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
-                    }
-                }
-            }
-            else
-            {
-                if ((this.transform.rotation.eulerAngles.z > negAngle) && (this.transform.rotation.eulerAngles.z < posAngle))
-                {
-                    this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
-                }
-            }
+            transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), rotationSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, currentNode.transform.position, speed * Time.deltaTime);
             yield return null;
         }
-        while(this.transform.position != currentNode.transform.position)
-        {
-            this.transform.position += this.transform.up * speed * Time.deltaTime;
-            if(TileManager.Instance.findCurrentNode(this.transform.position) == currentNode)
-            {
-                Debug.Log("offset");
-                this.transform.position = currentNode.transform.position;
-            }
-            if(Vector3.Distance(this.transform.position, currentNode.transform.position) > 1.9)
-            {
-                Debug.Log("error");
-                this.transform.position = currentNode.transform.position;
-            }
-            yield return null;
-        }
+        transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
+        Debug.Log("Move Complete");
         TileManager.Instance.Path.Remove(currentNode);
         isMove = false;
     }
     private IEnumerator RotateWolf()
     {
-        Vector3 _direction = TileManager.Instance.Path[0].transform.position - currentNode.transform.position;
+        Vector3 _direction = nextMoveNode.transform.position - currentNode.transform.position;
+        currentNode = nextMoveNode;
         float eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
-        float posAngle = eulerAngle + 1;
-        float negAngle = eulerAngle - 1;
-        while (this.transform.rotation.eulerAngles.z != eulerAngle)
+
+        while ((Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0,0,eulerAngle)) < 0.5f)&& (Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle)) > -0.5f))
         {
-            //회전부터 시작, 회전이 끝나면 이동 시작
-            //this.transform.rotation = Quaternion.Euler(0,0,this.transform.rotation.eulerAngles.z + rotationSpeed * Time.deltaTime);
-            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), Time.deltaTime * rotationSpeed);
-            if (negAngle < 0)
-            {
-                if (((this.transform.rotation.eulerAngles.z - 360) % 360 > negAngle) && ((this.transform.rotation.eulerAngles.z - 360) % 360 < posAngle))
-                {
-                    this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
-                }
-            }
-            else
-            {
-                if ((this.transform.rotation.eulerAngles.z > negAngle) && (this.transform.rotation.eulerAngles.z < posAngle))
-                {
-                    this.transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
-                }
-            }
+            transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), rotationSpeed * Time.deltaTime);
             yield return null;
         }
+        transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
     }
     //대기상태가 되면 일정 시간을 주기로 경로를 재탐색, 새로운 경로가 나온다면 대기에서 벗어나 이동, 대기 중일 때 쿨타임마다 동료 소환
     private MapNode findPlayerNode()
