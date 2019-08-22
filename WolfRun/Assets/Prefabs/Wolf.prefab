@@ -93,13 +93,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c5b4d82e6e23524fbc50b9027c8b4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.5
+  speed: 1.5
   rotationSpeed: 10
   findPath: {fileID: 2329085119081600302}
   howlingTime: 20
   summonWolfTime: 20
   summon: {fileID: 65830257852796487, guid: 04e75e03dce88664cba73ffcd81661d9, type: 3}
   findPathTime: 5
+  currentNode: {fileID: 0}
   nextMoveNode: {fileID: 0}
 --- !u!114 &2329085119081600302
 MonoBehaviour:
