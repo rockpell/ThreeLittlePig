@@ -41,7 +41,6 @@ public class Wolf : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         //늑대의 현재 타일을 저장
         currentNode = TileManager.Instance.findCurrentNode(this.transform.position);
-        findPath.initializePath(currentNode, findPlayerNode());
         path = TileManager.Instance.Path;
     }
 
@@ -64,7 +63,6 @@ public class Wolf : MonoBehaviour
         }
         if(isWait == false)//지금이 대기상태인지 나타냄
         {
-            Debug.Log("no Idle");
             movePath();
             //현재 타일과 이동 할 타일 비교, 같으면 동작 안함
             if(nextMoveNode == null)
@@ -74,17 +72,14 @@ public class Wolf : MonoBehaviour
             if (TileManager.Instance.findCurrentNode(this.transform.position) != nextMoveNode)
             {
                 //이동/회전 코드 적고 이동이 완료되면 Path에서 0번 제거
-                Debug.Log("Moving Check");
                 if (isMove == false)
                 {
-                    Debug.Log("Moving");
                     StartCoroutine(moveAndRotate());
                 }
             }
         }
         else
         {
-            Debug.Log("Idle");
             if ((summonWolfCntTime > summonWolfTime) && isSummon)
             {
                 summonWolfCntTime = 0;
@@ -221,7 +216,6 @@ public class Wolf : MonoBehaviour
         {
             windTimer += Time.deltaTime;
             //여기서는 그냥 대기
-            Debug.Log("휘이이이이이잉");
             yield return null;
         }
         Debug.Log("바람 끝");
