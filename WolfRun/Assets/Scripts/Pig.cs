@@ -12,6 +12,10 @@ public class Pig : MonoBehaviour
     private MapNode nowLookTile = null;
 
     private int fireResistance = 100;
+    private int initFireResistanceRecoveryTime = 3;
+    private float fireResistanceRecoveryTime = 0;
+    private bool isFireResistanceRecovery = false;
+
     private float moveSpeed = 4f;
 
     private float[] constructionTime = new float[3]; // 짚, 나무, 벽돌 건설하는데 걸리는 시간
@@ -30,6 +34,8 @@ public class Pig : MonoBehaviour
     private Rigidbody2D rigid;
     private UIManager uiManager = null;
     private GameManager gameManager = null;
+
+    private float deltaTime = 0;
 
     void Awake()
     {
@@ -57,6 +63,35 @@ public class Pig : MonoBehaviour
 
     void Update()
     {
+        deltaTime += Time.deltaTime;
+
+        if (deltaTime > 0.2f)
+        {
+            deltaTime -= 0.2f;
+            if (fireResistanceRecoveryTime != 0)
+            {
+                fireResistanceRecoveryTime -= 0.2f;
+                if (fireResistanceRecoveryTime <= 0)
+                {
+                    fireResistanceRecoveryTime = 0;
+                    isFireResistanceRecovery = true;
+                }
+            }
+
+            if (isFireResistanceRecovery)
+            {
+                if (fireResistance < 100)
+                {
+                    fireResistance += 1;
+                }
+                else if(fireResistance >= 100)
+                {
+                    isFireResistanceRecovery = false;
+                    uiManager.showFireResistanceUI(false);
+                }
+            }
+        }
+
         if (nowLookTile != null && (nowLookTile.WallState == WallType.STRAW || nowLookTile.WallState == WallType.WOOD))
         {
             UIManager.Instance.showFireText(true);
@@ -79,6 +114,11 @@ public class Pig : MonoBehaviour
                 nowAct = Act.NONE;
                 uiManager.showActingText(false);
             }
+        }
+
+        if(fireResistance <= 0)
+        {
+            gameManager.gameEnd();
         }
     }
 
@@ -155,7 +195,6 @@ public class Pig : MonoBehaviour
                 leftCooldown[0] = cooldownWall[0];
                 if(nowLookTile != null)
                     nowLookTile.changeState(WallType.STRAW, _isHorizental);
-                //gameManager.plusScore(ScoreEvent.STUN);
                 break;
             case WallType.WOOD:
                 leftCooldown[1] = cooldownWall[1];
@@ -313,8 +352,12 @@ public class Pig : MonoBehaviour
         leftActTime = burstTime;
     }
 
+    [ContextMenu("burn")]
     public void burn()
     {
         fireResistance -= 10;
+        fireResistanceRecoveryTime = initFireResistanceRecoveryTime;
+        isFireResistanceRecovery = false;
+        uiManager.showFireResistanceUI(true);
     }
 }

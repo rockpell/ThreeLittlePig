@@ -16,13 +16,24 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject endingObject;
     [SerializeField] private GameObject actingTextObject;
     [SerializeField] private Transform outlineObject;
+    [SerializeField] private GameObject fireResistanceObject;
 
     private float deltaTime;
+
+    private bool isFireResistanceUI;
 
     private GameManager gameManager;
 
     private Queue<int> scoreEffectQueue;
     private Coroutine nowCoroutine;
+
+    private RectTransform fireResistanceUI;
+    private Image fireResistanceImage;
+    private Color normalColor;
+    private Color warningColor;
+    private Color dangerColor;
+    private float fireResistanceUIWidth = 600;
+    private float fireResistanceUIHeight = 30;
 
     void Awake()
     {
@@ -33,6 +44,13 @@ public class UIManager : Singleton<UIManager>
     {
         scoreEffectQueue = new Queue<int>();
         gameManager = GameManager.instance;
+
+        normalColor = new Color(0.5f, 1, 0, 1);
+        warningColor = new Color(1, 1, 0, 1);
+        dangerColor = new Color(1, 0, 0, 1);
+
+        fireResistanceUI = fireResistanceObject.GetComponent<RectTransform>();
+        fireResistanceImage = fireResistanceObject.GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -44,6 +62,13 @@ public class UIManager : Singleton<UIManager>
             deltaTime -= 0.2f;
             cooldownUI();
             scoreText.text = gameManager.Score.ToString();
+
+            if (isFireResistanceUI)
+            {
+                float _value = gameManager.Player.FireResistance;
+                changeColorFireUI(_value);
+                fireResistanceUI.sizeDelta = new Vector2(fireResistanceUIWidth * (_value/100), fireResistanceUIHeight);
+            }
         }
     }
 
@@ -235,6 +260,33 @@ public class UIManager : Singleton<UIManager>
     public void setOutlineTile(Vector3 worldPosition)
     {
         outlineObject.position = Camera.main.WorldToScreenPoint(worldPosition);
+    }
+
+    public void showFireResistanceUI(bool value)
+    {
+        isFireResistanceUI = value;
+        if (fireResistanceObject.activeSelf != value)
+            fireResistanceObject.SetActive(value);
+
+        if(value)
+            changeColorFireUI(gameManager.Player.FireResistance);
+
+    }
+
+    private void changeColorFireUI(float fireValue)
+    {
+        if (fireValue > 70)
+        {
+            fireResistanceImage.color = normalColor;
+        }
+        else if (fireValue > 40)
+        {
+            fireResistanceImage.color = warningColor;
+        }
+        else if (fireValue > 0)
+        {
+            fireResistanceImage.color = dangerColor;
+        }
     }
 
     [ContextMenu("Do Something")]
