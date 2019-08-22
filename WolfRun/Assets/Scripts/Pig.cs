@@ -209,6 +209,7 @@ public class Pig : MonoBehaviour
     public void setNowLookTile(MapNode tile)
     {
         nowLookTile = tile;
+        uiManager.setOutlineTile(nowLookTile.transform.position);
     }
 
     public void wheelNowConstructWallType(float value)

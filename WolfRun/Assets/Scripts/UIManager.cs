@@ -15,6 +15,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject fireTextObject;
     [SerializeField] private GameObject endingObject;
     [SerializeField] private GameObject actingTextObject;
+    [SerializeField] private Transform outlineObject;
 
     private float deltaTime;
 
@@ -229,6 +230,11 @@ public class UIManager : Singleton<UIManager>
             }
             actingTextObject.SetActive(value);
         }
+    }
+
+    public void setOutlineTile(Vector3 worldPosition)
+    {
+        outlineObject.position = Camera.main.WorldToScreenPoint(worldPosition);
     }
 
     [ContextMenu("Do Something")]
