@@ -43,10 +43,10 @@ public class InputManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 nowPlayer.constructionWall();
-                nowPlayer.dressingUp();
             }
             else if (Input.GetKeyDown(KeyCode.Mouse1))
             {
+                nowPlayer.dressingUp();
                 nowPlayer.destroyWall();
             }
             else if (Input.GetKeyDown(KeyCode.F))
