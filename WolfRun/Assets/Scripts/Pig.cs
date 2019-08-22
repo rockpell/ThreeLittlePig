@@ -160,6 +160,7 @@ public class Pig : MonoBehaviour
                     nowLookTile.changeState(WallType.BRICK);
                 break;
         }
+        gameManager.ConstructionCount += 1;
     }
 
     public void destroyWall() // 나무, 벽돌 벽일 경우에만 작동 가능
@@ -170,7 +171,10 @@ public class Pig : MonoBehaviour
             if (nowLookTile != null)
             {
                 if(nowLookTile.WallState == WallType.WOOD || nowLookTile.WallState == WallType.BRICK)
+                {
                     nowLookTile.changeState(WallType.NONE);
+                    gameManager.DestroyCount += 1;
+                }
             }
         }
     }
@@ -195,7 +199,10 @@ public class Pig : MonoBehaviour
     {
         Debug.Log("fireWall");
         if (nowLookTile != null)
+        {
             nowLookTile.changeState(WallType.FIRE);
+            gameManager.FireCount += 1;
+        }
     }
 
     public void dressingUp() // 늑대한테 옷 입히기
@@ -203,13 +210,18 @@ public class Pig : MonoBehaviour
         if (!isActing)
         {
             Debug.Log("dressingUp");
+            gameManager.DressUpCount += 1;
+            gameManager.plusScore(ScoreEvent.DRESSUP);
         }
     }
 
     public void setNowLookTile(MapNode tile)
     {
-        nowLookTile = tile;
-        uiManager.setOutlineTile(nowLookTile.transform.position);
+        if (!isActing)
+        {
+            nowLookTile = tile;
+            uiManager.setOutlineTile(nowLookTile.transform.position);
+        }
     }
 
     public void wheelNowConstructWallType(float value)
@@ -287,5 +299,10 @@ public class Pig : MonoBehaviour
             uiManager.showActingText(true, Act.CONSTRUTION);
         }
         leftActTime = burstTime;
+    }
+
+    public void burn()
+    {
+        fireResistance -= 10;
     }
 }
