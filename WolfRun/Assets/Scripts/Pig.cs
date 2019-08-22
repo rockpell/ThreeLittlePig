@@ -21,6 +21,8 @@ public class Pig : MonoBehaviour
     private float leftActTime = 0;
     private bool isActing = false;
 
+    private Act nowAct = Act.NONE;
+
     private float rotateValue;
     private Vector3 playerPosition;
     private Vector2 direction;
@@ -69,11 +71,12 @@ public class Pig : MonoBehaviour
             leftActTime -= Time.deltaTime;
             if (leftActTime < 0)
             {
-                if (nowConstructWallType != WallType.FIRE)
+                if (nowAct == Act.CONSTRUTION)
                     constructionWall(nowConstructWallType);
-                else
+                else if(nowAct == Act.FIRE)
                     fireWall();
                 isActing = false;
+                nowAct = Act.NONE;
                 uiManager.showActingText(false);
             }
         }
@@ -133,7 +136,7 @@ public class Pig : MonoBehaviour
 
     private void tryConstructionWall(WallType wallType)
     {
-        setActing(constructionTime[(int)wallType]);
+        setActing(constructionTime[(int)wallType], Act.CONSTRUTION);
     }
 
     private void constructionWall(WallType wallType)
@@ -185,7 +188,7 @@ public class Pig : MonoBehaviour
 
     private void tryFireWall()
     {
-        setActing(1);
+        setActing(1, Act.FIRE);
     }
 
     private void fireWall()
@@ -270,10 +273,18 @@ public class Pig : MonoBehaviour
         return transform.GetChild(1).position;
     }
 
-    private void setActing(float burstTime)
+    private void setActing(float burstTime, Act nowAct = Act.NONE)
     {
         isActing = true;
-        uiManager.showActingText(true, nowConstructWallType);
+        this.nowAct = nowAct;
+        if(nowAct == Act.FIRE)
+        {
+            uiManager.showActingText(true, Act.FIRE);
+        }
+        else if(nowAct == Act.CONSTRUTION)
+        {
+            uiManager.showActingText(true, Act.CONSTRUTION);
+        }
         leftActTime = burstTime;
     }
 }

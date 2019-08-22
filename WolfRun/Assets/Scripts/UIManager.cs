@@ -209,18 +209,18 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    public void showActingText(bool value, WallType nowWallType = WallType.NONE)
+    public void showActingText(bool value, Act nowAct = Act.NONE)
     {
         if (actingTextObject.activeSelf != value)
         {
             if (value)
             {
-                string _actText;
-                if(nowWallType == WallType.FIRE)
+                string _actText = "";
+                if(nowAct == Act.FIRE)
                 {
                     _actText = "벽에 불을 붙히는 중";
                 }
-                else
+                else if(nowAct == Act.CONSTRUTION)
                 {
                     _actText = "벽을 만드는 중";
                 }

@@ -21,7 +21,7 @@ public class InputManager : MonoBehaviour
         nowPlayer.move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         nowPlayer.lookMouse(_mouseWorldPosition);
 
-        //nowPlayer.setNowLookTile(TileManager.Instance.lookForwardTile(nowPlayer.transform.position, _mouseWorldPosition));
+        nowPlayer.setNowLookTile(TileManager.Instance.lookForwardTile(nowPlayer.transform.position, _mouseWorldPosition));
 
         wheelValue = Input.GetAxisRaw("Mouse ScrollWheel");
 
