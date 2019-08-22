@@ -180,19 +180,6 @@ public class UIManager : Singleton<UIManager>
         plusScoreText.gameObject.SetActive(true);
     }
 
-    public void gameEndingUI(GameEnding gameEnding)
-    {
-        switch (gameEnding)
-        {
-            case GameEnding.THEFT:
-                break;
-            case GameEnding.ARREST:
-                break;
-            case GameEnding.MEAT:
-                break;
-        }
-    }
-
     public void refreshAliveTimeText(int time)
     {
         aliveTimeText.text = time.ToString();
@@ -270,7 +257,6 @@ public class UIManager : Singleton<UIManager>
 
         if(value)
             changeColorFireUI(gameManager.Player.FireResistance);
-
     }
 
     private void changeColorFireUI(float fireValue)
@@ -289,10 +275,17 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    public void gameEndingUI(GameEnding gameEnding)
+    {
+        endingObject.GetComponent<EndingUI>().settingGameEnding(gameEnding);
+        endingObject.SetActive(true);
+    }
+
     [ContextMenu("Do Something")]
+    // 테스트용 함수
     public void showEnding()
     {
         endingObject.SetActive(true);
-        //
+        endingObject.GetComponent<EndingUI>().settingGameEnding(GameEnding.ARREST);
     }
 }

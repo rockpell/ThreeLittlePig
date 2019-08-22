@@ -28,7 +28,7 @@ public class EndingUI : MonoBehaviour
         buttons[0].SetActive(false);
         buttons[1].SetActive(false);
 
-        StartCoroutine(sequence());
+        //StartCoroutine(sequence());
     }
 
     // Update is called once per frame
@@ -37,7 +37,23 @@ public class EndingUI : MonoBehaviour
         
     }
 
-    private IEnumerator sequence()
+    public void settingGameEnding(GameEnding gameEnding)
+    {
+        switch (gameEnding)
+        {
+            case GameEnding.THEFT:
+                StartCoroutine(theftSequence());
+                break;
+            case GameEnding.ARREST:
+                StartCoroutine(arrestSequence());
+                break;
+            case GameEnding.MEAT:
+                StartCoroutine(meatSequence());
+                break;
+        }
+    }
+
+    private IEnumerator arrestSequence()
     {
         for(int i = 0; i < 4; i++)
         {
@@ -79,5 +95,29 @@ public class EndingUI : MonoBehaviour
                 crimeDetail += gameManager.ConstructionCount + "회\n";
                 break;
         }
+    }
+
+    private IEnumerator theftSequence()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        headText.text = "절도죄로 체포되었습니다";
+
+        yield return new WaitForSeconds(1.0f);
+
+        buttons[0].SetActive(true);
+        buttons[1].SetActive(true);
+    }
+
+    private IEnumerator meatSequence()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        headText.text = "오늘 저녁은 돼지고기다!";
+
+        yield return new WaitForSeconds(1.0f);
+
+        buttons[0].SetActive(true);
+        buttons[1].SetActive(true);
     }
 }
