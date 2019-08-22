@@ -70,6 +70,11 @@ public class UIManager : Singleton<UIManager>
                 fireResistanceUI.sizeDelta = new Vector2(fireResistanceUIWidth * (_value/100), fireResistanceUIHeight);
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            showEnding();
+        }
     }
 
     public void selectWallTypeButton(int index)

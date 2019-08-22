@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EndingUI : MonoBehaviour
@@ -66,7 +67,7 @@ public class EndingUI : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        headText.text = "징역 ???년";
+        headText.text = "징역 " + (gameManager.Score / 100) + "년";
 
         yield return new WaitForSeconds(1.0f);
 
@@ -119,5 +120,31 @@ public class EndingUI : MonoBehaviour
 
         buttons[0].SetActive(true);
         buttons[1].SetActive(true);
+    }
+
+    public void restartButton()
+    {
+        SceneManager.LoadScene("SampleScene");
+        //StartCoroutine(LoadYourAsyncScene());
+    }
+
+    public void endButton()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    IEnumerator LoadYourAsyncScene()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("SampleScene", LoadSceneMode.Additive);
+
+        // Wait until the last operation fully loads to return anything
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        SceneManager.UnloadSceneAsync(currentScene);
     }
 }
