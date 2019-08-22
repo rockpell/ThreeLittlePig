@@ -144,23 +144,28 @@ public class Pig : MonoBehaviour
 
     private void constructionWall(WallType wallType)
     {
+        bool _isHorizental = true;
+        float _distance = nowLookTile.transform.position.y - transform.position.y;
+        if (-0.64 < _distance && _distance < 0.64)
+            _isHorizental = false;
+
         switch (wallType)
         {
             case WallType.STRAW:
                 leftCooldown[0] = cooldownWall[0];
                 if(nowLookTile != null)
-                    nowLookTile.changeState(WallType.STRAW);
+                    nowLookTile.changeState(WallType.STRAW, _isHorizental);
                 //gameManager.plusScore(ScoreEvent.STUN);
                 break;
             case WallType.WOOD:
                 leftCooldown[1] = cooldownWall[1];
                 if (nowLookTile != null)
-                    nowLookTile.changeState(WallType.WOOD);
+                    nowLookTile.changeState(WallType.WOOD, _isHorizental);
                 break;
             case WallType.BRICK:
                 leftCooldown[2] = cooldownWall[2];
                 if (nowLookTile != null)
-                    nowLookTile.changeState(WallType.BRICK);
+                    nowLookTile.changeState(WallType.BRICK, _isHorizental);
                 break;
         }
         gameManager.ConstructionCount += 1;
