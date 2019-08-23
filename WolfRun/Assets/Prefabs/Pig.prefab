@@ -52,6 +52,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a6b9fb7964631224ab67e5b83c9be017, type: 3}
   - {fileID: 21300000, guid: 72d66d6bd936eec468526bbc7bf3c875, type: 3}
   - {fileID: 21300000, guid: e9b8d7bf6b1cbdf43bbf754394ed24c3, type: 3}
+  burnSprites:
+  - {fileID: 21300000, guid: e3ff7675e5e062f4fb6e4171012ee185, type: 3}
+  - {fileID: 21300000, guid: c93fd9da6d4a6a74cb34099a32349639, type: 3}
+  - {fileID: 21300000, guid: abd25a287796dc24ba2206cc4cd17cb7, type: 3}
 --- !u!58 &1492011654069688466
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -2,3 +2,4 @@
 public enum ScoreEvent { STUN, DRESSUP}
 public enum GameEnding { THEFT,  ARREST, MEAT} // 절도죄 엔딩, 체포 엔딩, 고기 엔딩
 public enum Act { NONE, CONSTRUTION, FIRE}
+public enum BurnStatus { IDLE, NOBURN, BURNING, RECOVERY}

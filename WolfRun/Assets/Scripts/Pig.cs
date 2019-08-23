@@ -6,6 +6,7 @@ public class Pig : MonoBehaviour
 {
     [SerializeField] Transform spriteObject;
     [SerializeField] Sprite[] sprites;
+    [SerializeField] Sprite[] burnSprites;
 
     private WallType nowConstructWallType = WallType.STRAW;
 
@@ -14,6 +15,8 @@ public class Pig : MonoBehaviour
     private int fireResistance = 100;
     private int initFireResistanceRecoveryTime = 3;
     private float fireResistanceRecoveryTime = 0;
+    private float initNoBurnTime = 1;
+    private float noBurnTime = 0;
     private bool isFireResistanceRecovery = false;
 
     private float moveSpeed = 4f;
@@ -26,6 +29,7 @@ public class Pig : MonoBehaviour
     private bool isActing = false;
 
     private Act nowAct = Act.NONE;
+    [SerializeField] private BurnStatus burnStatus = BurnStatus.IDLE;
 
     private float rotateValue;
     private Vector3 playerPosition;
@@ -68,25 +72,34 @@ public class Pig : MonoBehaviour
         if (deltaTime > 0.2f)
         {
             deltaTime -= 0.2f;
-            if (fireResistanceRecoveryTime != 0)
+
+            if(burnStatus == BurnStatus.NOBURN)
+            {
+                noBurnTime -= 0.2f;
+                if (noBurnTime <= 0)
+                {
+                    burnStatus = BurnStatus.BURNING;
+                    fireResistanceRecoveryTime = initFireResistanceRecoveryTime;
+                }
+            }
+            else if(burnStatus == BurnStatus.BURNING)
             {
                 fireResistanceRecoveryTime -= 0.2f;
                 if (fireResistanceRecoveryTime <= 0)
                 {
-                    fireResistanceRecoveryTime = 0;
-                    isFireResistanceRecovery = true;
+                    burnStatus = BurnStatus.RECOVERY;
+                    spriteObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)nowConstructWallType];
                 }
             }
-
-            if (isFireResistanceRecovery)
+            else if(burnStatus == BurnStatus.RECOVERY)
             {
                 if (fireResistance < 100)
                 {
                     fireResistance += 1;
                 }
-                else if(fireResistance >= 100)
+                else if (fireResistance == 100)
                 {
-                    isFireResistanceRecovery = false;
+                    burnStatus = BurnStatus.IDLE;
                     uiManager.showFireResistanceUI(false);
                 }
             }
@@ -312,7 +325,10 @@ public class Pig : MonoBehaviour
             {
                 nowConstructWallType = value;
                 uiManager.highlightButton((int)nowConstructWallType);
-                spriteObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)nowConstructWallType];
+                if(burnStatus == BurnStatus.IDLE || burnStatus == BurnStatus.RECOVERY)
+                    spriteObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)nowConstructWallType];
+                else
+                    spriteObject.GetComponent<SpriteRenderer>().sprite = burnSprites[(int)nowConstructWallType];
             }
         }
     }
@@ -355,9 +371,18 @@ public class Pig : MonoBehaviour
     [ContextMenu("burn")]
     public void burn()
     {
-        fireResistance -= 10;
-        fireResistanceRecoveryTime = initFireResistanceRecoveryTime;
-        isFireResistanceRecovery = false;
-        uiManager.showFireResistanceUI(true);
+        if(burnStatus != BurnStatus.NOBURN)
+        {
+            fireResistance -= 10;
+            fireResistanceRecoveryTime = initFireResistanceRecoveryTime;
+
+            burnStatus = BurnStatus.NOBURN;
+            noBurnTime = initNoBurnTime;
+
+            isFireResistanceRecovery = false;
+            uiManager.showFireResistanceUI(true);
+
+            spriteObject.GetComponent<SpriteRenderer>().sprite = burnSprites[(int)nowConstructWallType];
+        }
     }
 }
