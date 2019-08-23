@@ -7,6 +7,7 @@ public class Pig : MonoBehaviour
     [SerializeField] Transform spriteObject;
     [SerializeField] Sprite[] sprites;
     [SerializeField] Sprite[] burnSprites;
+    [SerializeField] PigAudio pigAudio;
 
     private WallType nowConstructWallType = WallType.STRAW;
 
@@ -28,7 +29,7 @@ public class Pig : MonoBehaviour
     private bool isActing = false;
 
     private Act nowAct = Act.NONE;
-    [SerializeField] private BurnStatus burnStatus = BurnStatus.IDLE;
+    private BurnStatus burnStatus = BurnStatus.IDLE;
 
     private float rotateValue;
     private Vector3 playerPosition;
@@ -192,6 +193,7 @@ public class Pig : MonoBehaviour
     private void tryConstructionWall(WallType wallType)
     {
         setActing(constructionTime[(int)wallType], Act.CONSTRUTION);
+        pigAudio.constructionSound(wallType);
     }
 
     private void constructionWall(WallType wallType)
@@ -220,6 +222,8 @@ public class Pig : MonoBehaviour
                 break;
         }
         gameManager.ConstructionCount += 1;
+
+        pigAudio.stopSound();
     }
 
     public void destroyWall() // 나무, 벽돌 벽일 경우에만 작동 가능
