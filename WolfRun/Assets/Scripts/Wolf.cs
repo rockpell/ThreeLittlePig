@@ -51,11 +51,6 @@ public class Wolf : MonoBehaviour
         howlingCntTime += Time.deltaTime;
         findPathCntTime += Time.deltaTime;
 
-        if(TileManager.Instance.Path.Count > 0)
-        {
-            isWait = false;
-            //currentNode = TileManager.Instance.findCurrentNode(this.transform.position);
-        }
         if(findPathCntTime > findPathTime)
         {
             findPathCntTime = 0;
@@ -77,9 +72,16 @@ public class Wolf : MonoBehaviour
                     StartCoroutine(moveAndRotate());
                 }
             }
+            else
+            {
+                if (TileManager.Instance.Path.Count > 0) { }
+                    //nextMoveNode = TileManager.Instance.Path[0];
+            }
         }
         else
         {
+            //대기 중 새로운 경로가 나와도 실행을 못함
+            movePath();
             if ((summonWolfCntTime > summonWolfTime) && isSummon)
             {
                 summonWolfCntTime = 0;
@@ -93,6 +95,8 @@ public class Wolf : MonoBehaviour
     {
         findPath.initializePath(node, findPlayerNode());
         yield return null;
+        if (TileManager.Instance.Path.Count > 0)
+            isWait = false;
     }
     private IEnumerator moveAndRotate()//회전부터 하고 끝나면 이동 시작해야 할듯
     {
@@ -110,16 +114,16 @@ public class Wolf : MonoBehaviour
         }
         transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
         Debug.Log("Move Complete");
-        TileManager.Instance.Path.Remove(currentNode);
+        if(TileManager.Instance.Path.Count > 1)
+            TileManager.Instance.Path.Remove(currentNode);
         isMove = false;
     }
-    private IEnumerator RotateWolf()
+    private IEnumerator RotateWolf(MapNode node)
     {
-        Vector3 _direction = nextMoveNode.transform.position - currentNode.transform.position;
-        currentNode = nextMoveNode;
+        Vector3 _direction = node.transform.position - currentNode.transform.position;
         float eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
 
-        while ((Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0,0,eulerAngle)) < 0.5f)&& (Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle)) > -0.5f))
+        while ((Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0,0,eulerAngle)) > 0.5f) || (Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle)) < -0.5f))
         {
             transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), rotationSpeed * Time.deltaTime);
             yield return null;
@@ -143,6 +147,7 @@ public class Wolf : MonoBehaviour
             {
                 case WallType.NONE:
                     //이건 그냥 이동하면 됨
+                    isWait = false;
                     nextMoveNode = TileManager.Instance.Path[0];
                     break;
                 case WallType.STRAW:
@@ -170,6 +175,7 @@ public class Wolf : MonoBehaviour
         {
             //Path가 없는 경우 => 갈 길이 없는 경우이므로 불타는 벽으로 막힌 경우
             //대기를 하며 길이 열리거나 동료 소환 쿨타임이 되기를 기다려야 함
+            //경로 업데이트 이전에 플레이어가 있었던 위치에 도달한 경우 -> 노드 도달마다 제거하기 때문에 0이 될 수 있음
             isWait = true;
             isSummon = true;
         }
@@ -204,14 +210,17 @@ public class Wolf : MonoBehaviour
     {
         //매개변수로 넘겨받은 weight에 해당하는 시간을 기다리고 이동 가능
         //기다리는 동안 바람을 부는듯한 이펙트 재생
-        windEffect(weight);
-        StartCoroutine(windIdle(weight, node));
+        if(isWait == false)
+        {
+            windEffect(weight);
+            StartCoroutine(windIdle(weight, node));
+        }
     }
 
     private IEnumerator windIdle(int time, MapNode node)
     {
         isWait = true;
-        yield return StartCoroutine(RotateWolf());
+        yield return StartCoroutine(RotateWolf(node));
         while (windTimer < time)
         {
             windTimer += Time.deltaTime;

@@ -32,7 +32,6 @@ public class FindPath : MonoBehaviour
     public void initializePath(MapNode startNode, MapNode finishNode)
     {
         initializeCost();
-        TileManager.Instance.Path.Clear();
         openList.Clear();
         closeList.Clear();
 
@@ -100,7 +99,8 @@ public class FindPath : MonoBehaviour
         }
         //목적지부터 출발지가 나올 때 까지 부모노드를 따라가면 경로가 생성됨
         MapNode _node = finishNode;
-        while(_node != startNode)
+        TileManager.Instance.Path.Clear();
+        while (_node != startNode)
         {
             TileManager.Instance.Path.Insert(0, _node);
             _node = _node.ParentNode;
@@ -121,7 +121,9 @@ public class FindPath : MonoBehaviour
     int calculateMoveCost(MapNode node)
     {
         //부모노드에서 현재 노드로 이동하는데 드는 비용
-        int cost = node.ParentNode.MoveCost + 1 + node.Weight;
+        //임시로 1씩 증가하도록 했는데 그냥 Distance사용해도 될꺼 같기도 하고
+        //int cost = node.ParentNode.MoveCost + 1 + node.Weight;
+        int cost = node.ParentNode.MoveCost + (int)(Vector3.Distance(node.gameObject.transform.position, node.ParentNode.gameObject.transform.position)*10) + node.Weight;
         node.MoveCost = cost;
         return cost;
     }
