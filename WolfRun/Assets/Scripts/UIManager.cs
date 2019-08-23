@@ -124,11 +124,9 @@ public class UIManager : Singleton<UIManager>
         plusScoreText.text = "";
         yield return StartCoroutine(appearScoreEffect());
 
-        while (scoreEffectQueue.Count > 0)
-        {
-            plusScoreText.text = "+" + scoreEffectQueue.Dequeue();
-            yield return new WaitForSeconds(1f);
-        }
+        plusScoreText.text = "+" + scoreEffectQueue.Dequeue();
+
+        yield return new WaitForSeconds(1f);
 
         yield return StartCoroutine(disappearScoreEffect());
         nowCoroutine = null;

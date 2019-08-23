@@ -227,11 +227,11 @@ public class Pig : MonoBehaviour
     {
         if (!isActing)
         {
-            Debug.Log("destroyWall");
             if (nowLookTile != null)
             {
                 if(nowLookTile.WallState == WallType.WOOD || nowLookTile.WallState == WallType.BRICK)
                 {
+                    Debug.Log("destroyWall");
                     nowLookTile.changeState(WallType.NONE);
                     gameManager.DestroyCount += 1;
                     gameManager.Wolves[0].checkBrokenWall(nowLookTile);
