@@ -34,6 +34,8 @@ public class Wolf : MonoBehaviour
     [SerializeField] private Sprite grandma;
     [SerializeField] private Sprite origin;
 
+    [SerializeField] private GameObject windEffectImage;
+
     private MapNode currentNode;
     public MapNode CurrentNode
     {
@@ -46,6 +48,7 @@ public class Wolf : MonoBehaviour
 
     private bool isMove;
     private bool isWait;
+    private bool isWind;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -61,16 +64,16 @@ public class Wolf : MonoBehaviour
         howlingCntTime += Time.deltaTime;
         findPathCntTime += Time.deltaTime;
 
-        if(findPathCntTime > findPathTime)
+        if (findPathCntTime > findPathTime)
         {
             findPathCntTime = 0;
             StartCoroutine(findRoute(currentNode));
         }
-        if(isWait == false)//지금이 대기상태인지 나타냄
+        if (isWait == false)//지금이 대기상태인지 나타냄
         {
             movePath();
             //현재 타일과 이동 할 타일 비교, 같으면 동작 안함
-            if(nextMoveNode == null)
+            if (nextMoveNode == null)
             {
                 return;
             }
@@ -85,7 +88,7 @@ public class Wolf : MonoBehaviour
             else
             {
                 if (TileManager.Instance.Path.Count > 0) { }
-                    //nextMoveNode = TileManager.Instance.Path[0];
+                //nextMoveNode = TileManager.Instance.Path[0];
             }
         }
         else
@@ -116,7 +119,7 @@ public class Wolf : MonoBehaviour
         currentNode = nextMoveNode;
         float eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
 
-        while(Vector3.Distance(this.transform.position, currentNode.transform.position) > 0.1f)
+        while (Vector3.Distance(this.transform.position, currentNode.transform.position) > 0.1f)
         {
             transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), rotationSpeed * Time.deltaTime);
             transform.position = Vector3.MoveTowards(transform.position, currentNode.transform.position, speed * Time.deltaTime);
@@ -124,7 +127,7 @@ public class Wolf : MonoBehaviour
         }
         transform.rotation = Quaternion.Euler(0, 0, eulerAngle);
         Debug.Log("Move Complete");
-        if(TileManager.Instance.Path.Count > 1)
+        if (TileManager.Instance.Path.Count > 1)
             TileManager.Instance.Path.Remove(currentNode);
         isMove = false;
     }
@@ -133,7 +136,7 @@ public class Wolf : MonoBehaviour
         Vector3 _direction = node.transform.position - currentNode.transform.position;
         float eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
 
-        while ((Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0,0,eulerAngle)) > 0.5f) || (Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle)) < -0.5f))
+        while ((Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle)) > 0.5f) || (Quaternion.Angle(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle)) < -0.5f))
         {
             transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0, 0, eulerAngle), rotationSpeed * Time.deltaTime);
             yield return null;
@@ -150,7 +153,7 @@ public class Wolf : MonoBehaviour
         //다음에 이동 할 타일을 지정
         //이동 할 타일의 상태 판단(풀-None 상태인 경우에만 이동 가능, 벽인 경우 blowWind 수행, 불타는 타일인 경우 새로운 경로 검색)
         //지정하고 나면 늑대의 현재 타일을 이동 할 타일로 변경
-        if(TileManager.Instance.Path.Count > 0)
+        if (TileManager.Instance.Path.Count > 0)
         {
             MapNode nextNode = TileManager.Instance.Path[0];
             switch (nextNode.WallState)
@@ -198,13 +201,13 @@ public class Wolf : MonoBehaviour
         //제거에 연출 들어갈 수 있음
         List<MapList> lists = TileManager.Instance.MapLists;
 
-        foreach(MapList list in lists)
+        foreach (MapList list in lists)
         {
-            foreach(MapNode node in list.nodes)
+            foreach (MapNode node in list.nodes)
             {
-                if((node.WallState == WallType.STRAW)||
-                    (node.WallState == WallType.WOOD)||
-                    (node.WallState == WallType.BRICK)||
+                if ((node.WallState == WallType.STRAW) ||
+                    (node.WallState == WallType.WOOD) ||
+                    (node.WallState == WallType.BRICK) ||
                     (node.WallState == WallType.FIRE))
                 {
                     GameObject _summon = Instantiate(summon, node.transform.position, Quaternion.identity);
@@ -220,9 +223,9 @@ public class Wolf : MonoBehaviour
     {
         //매개변수로 넘겨받은 weight에 해당하는 시간을 기다리고 이동 가능
         //기다리는 동안 바람을 부는듯한 이펙트 재생
-        if(isWait == false)
+        if (isWind == false)
         {
-            StartCoroutine(windEffect(weight));
+            windEffect(weight, node);
             StartCoroutine(windIdle(weight, node));
         }
     }
@@ -230,6 +233,7 @@ public class Wolf : MonoBehaviour
     private IEnumerator windIdle(int time, MapNode node)
     {
         isWait = true;
+        isWind = true;
         yield return StartCoroutine(RotateWolf(node));
         while (windTimer < time)
         {
@@ -240,15 +244,23 @@ public class Wolf : MonoBehaviour
         Debug.Log("바람 끝");
         node.changeState(WallType.NONE);
         windTimer = 0;
+        isWind = false;
         isWait = false;
     }
 
-    private IEnumerator windEffect(int time)
+    private void windEffect(int time, MapNode node)
     {
         //time만큼 바람 부는듯한 느낌 주도록 애니메이션이든 파티클이든 재생
         //이미지 변경하는걸로 됨
-        //바람이미지 깜박이는 정도로 하면 될꺼 같은데 
-        yield return null;
+        //바람이미지 깜박이는 정도로 하면 될꺼 같은데
+        //windEffectImage를 해당 벽에 생성하는걸로
+        //회전 방향은 늑대 -> 벽 방향으로 회전시켜 출력하면 될듯
+        //이미지 깜박이는건 나중에 하고 일단 생성만
+        Vector3 _direction = node.transform.position - currentNode.transform.position;
+        float _eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
+
+        GameObject windImage = Instantiate(windEffectImage, node.transform.position, Quaternion.Euler(0, 0, _eulerAngle));
+        windImage.GetComponent<WindEffect>().initializeTime(time);
     }
     private void howling()
     {
@@ -261,7 +273,7 @@ public class Wolf : MonoBehaviour
     {
         //부순 맵 노드를 매개변수로 알려줌
         //여기서 늑대 위치랑 node랑 비교해서 같으면 stun 호출
-        if(node == TileManager.Instance.findCurrentNode(this.transform.position))
+        if (node == TileManager.Instance.findCurrentNode(this.transform.position))
             stun(brokenWallTime);
     }
     public void dressUp()
@@ -278,17 +290,17 @@ public class Wolf : MonoBehaviour
         stunTime += time;
         isWait = true;
         StartCoroutine(stunDuration(stunTime));
-        
+
     }
     private IEnumerator stunDuration(float time)
     {
         float _indexCounter = 0;
         int _index = 0;
-        while(stunCntTime < time)
+        while (stunCntTime < time)
         {
             stunCntTime += Time.deltaTime;
             _indexCounter += Time.deltaTime;
-            if(_indexCounter > 0.5f)
+            if (_indexCounter > 0.5f)
             {
                 _index = (_index + 1) % 2;
                 this.GetComponent<SpriteRenderer>().sprite = stunImage[_index];
