@@ -22,7 +22,7 @@ public class MapNode:MonoBehaviour
     private float burnCounter;
 
     [SerializeField] private Sprite normalSprite;
-    [SerializeField] private Sprite fireSprite;
+    [SerializeField] private Sprite[] fireSprite;
     [SerializeField] private Sprite[] wallSprite;
 
     [SerializeField] private int strawBurnTime;
@@ -65,18 +65,31 @@ public class MapNode:MonoBehaviour
         }
         
         neighbors = TileManager.Instance.getNeighbors(this);
-        StartCoroutine(burnTimeCount(_time));
+        StartCoroutine(burnTimeCount(_time, wallType));
         isBurn = true;
     }
-    private IEnumerator burnTimeCount(int time)
+    private IEnumerator burnTimeCount(int time, WallType wallType)
     {
+        int _index = 0;
+        
+        float _indexCounter = 0;
         while (burnCounter < time)
         {
+            _indexCounter += Time.deltaTime;
             burnCounter += Time.deltaTime;
+            if(_indexCounter > 0.5f)
+            {
+                _indexCounter = 0;
+                _index = (_index + 1) % 2;
+                if (wallType == WallType.WOOD)
+                    _index += 2;
+                this.gameObject.GetComponent<SpriteRenderer>().sprite = fireSprite[_index];
+            }
             yield return null;
         }
         isBurn = false;
         burnCounter = 0;
+        changeState(WallType.NONE);
     }
     private void checkNeighborWall()
     {
@@ -86,14 +99,12 @@ public class MapNode:MonoBehaviour
         {
             foreach(MapNode _node in neighbors)
             {
-                switch(_node.wallState)
+                if((_node.wallState == WallType.STRAW)||(_node.wallState == WallType.WOOD))
                 {
-                    case WallType.STRAW:
+                    if (this.transform.rotation.eulerAngles.z > 0)
+                        _node.changeState(WallType.FIRE, false);
+                    else
                         _node.changeState(WallType.FIRE);
-                        break;
-                    case WallType.WOOD:
-                        _node.changeState(WallType.FIRE);
-                        break;
                 }
             }
         }
@@ -148,7 +159,10 @@ public class MapNode:MonoBehaviour
             case WallType.FIRE:
                 isPath = false;
                 weight = 0;
-                this.gameObject.GetComponent<SpriteRenderer>().sprite = fireSprite;
+                if(wallState == WallType.STRAW)
+                    this.gameObject.GetComponent<SpriteRenderer>().sprite = fireSprite[0];
+                else if(wallState == WallType.WOOD)
+                    this.gameObject.GetComponent<SpriteRenderer>().sprite = fireSprite[2];
                 burn(wallState);
                 //burn함수 호출
                 break;

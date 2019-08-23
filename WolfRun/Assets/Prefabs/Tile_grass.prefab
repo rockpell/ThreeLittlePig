@@ -99,8 +99,14 @@ MonoBehaviour:
   moveCost: 0
   parentNode: {fileID: 0}
   normalSprite: {fileID: 21300000, guid: 6b8354213e3119c48908e710802128de, type: 3}
-  fireSprite: {fileID: 0}
+  fireSprite:
+  - {fileID: 21300000, guid: 80468147eae48784dae638f9fda90ace, type: 3}
+  - {fileID: 21300000, guid: b8658f2bbd44ca640bee49a795387788, type: 3}
+  - {fileID: 21300000, guid: 514cbbaf450004841a76929a654206e5, type: 3}
+  - {fileID: 21300000, guid: 2fd78de5388539a4c8f578032de40e90, type: 3}
   wallSprite:
   - {fileID: 21300000, guid: aba53f1dba2ddaa4da4e8fca44da0623, type: 3}
   - {fileID: 21300000, guid: 021f6193e4f578045af3f107355826e0, type: 3}
   - {fileID: 21300000, guid: 0dac55504e8196b40b42a0c57d504bbb, type: 3}
+  strawBurnTime: 5
+  woodBurnTime: 10
