@@ -1,19 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class MapGenerator : MonoBehaviour
 {
-    [SerializeField] private Transform parentMap;
-    [SerializeField] private GameObject grassTile;
-    [SerializeField] private GameObject treeTile;
-    [SerializeField] private GameObject stoneTile;
+    private static float size = 1.28f;
+    private static int mapWidth = 30;
+    private static int mapHeight = 30;
 
-    private float size = 1.28f;
-    private int mapWidth = 30;
-    private int mapHeight = 30;
-
-    int[,] mapData =
+    static int[,] mapData =
     {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -59,35 +55,41 @@ public class MapGenerator : MonoBehaviour
         
     }
 
-    private void createTile(int x, int y)
+    private static void createTile(int x, int y)
     {
-        GameObject _tile = Instantiate(choiceTile(mapData[(mapHeight-1) - y, x]), parentMap, false);
-        _tile.transform.position = new Vector3(size * x, size * y, 0);
+        GameObject _tile = null;
+        if (!EditorUtility.IsPersistent(Selection.activeObject))
+        {
+            GameObject _parent = Selection.activeObject as GameObject;
+            _tile = Instantiate(choiceTile(mapData[(mapHeight - 1) - y, x]), _parent.transform, false);
+        }
+
+        if(_tile != null)
+            _tile.transform.position = new Vector3(size * x, size * y, 0);
     }
 
-    private GameObject choiceTile(int type)
+    private static GameObject choiceTile(int type)
     {
         GameObject _result = null;
         switch (type)
         {
             case 0:
-                _result = grassTile;
+                _result = Resources.Load("Prefabs/Tile_grass") as GameObject; ;
                 break;
             case 1:
-                _result = stoneTile;
+                _result = Resources.Load("Prefabs/Tile_stone") as GameObject; ;
                 break;
             case 2:
-                _result = treeTile;
+                _result = Resources.Load("Prefabs/Tile_tree") as GameObject; ;
                 break;
             default:
-                _result = grassTile;
+                _result = Resources.Load("Prefabs/Tile_grass") as GameObject; ;
                 break;
         }
         return _result;
     }
 
-    [ContextMenu("create")]
-    public void createMap()
+    private static void createMap()
     {
         for (int y = 0; y < mapHeight; y++)
         {
@@ -96,5 +98,11 @@ public class MapGenerator : MonoBehaviour
                 createTile(x, y);
             }
         }
+    }
+
+    [MenuItem("Mymenu/CreateMap")]
+    static void DoSomething()
+    {
+        createMap();
     }
 }

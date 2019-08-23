@@ -16207,13 +16207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b06563dff46e641af54384d67429d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentMap: {fileID: 0}
-  grassTile: {fileID: 3882902839811513825, guid: 8b7ef78dc61dcba47a2d28ea54c6c6b9,
-    type: 3}
-  treeTile: {fileID: 4498491531820983974, guid: 7fdc605fb3d857349811657cebf31a4c,
-    type: 3}
-  stoneTile: {fileID: 6849566769544542109, guid: 73675912617940a4c987577b754cbda8,
-    type: 3}
 --- !u!4 &301471349
 Transform:
   m_ObjectHideFlags: 0
@@ -92856,7 +92849,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1929507731}
   m_Layer: 0
-  m_Name: NewMap2
+  m_Name: NewMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92870,7 +92863,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1929507730}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.36, y: -11.4, z: 0}
+  m_LocalPosition: {x: -15.36, y: -11.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 470493440}
