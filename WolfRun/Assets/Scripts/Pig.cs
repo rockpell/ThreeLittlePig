@@ -38,6 +38,7 @@ public class Pig : MonoBehaviour
     private Rigidbody2D rigid;
     private UIManager uiManager = null;
     private GameManager gameManager = null;
+    private TileManager tileManager = null;
 
     private float deltaTime = 0;
 
@@ -61,6 +62,7 @@ public class Pig : MonoBehaviour
 
         uiManager = UIManager.Instance;
         gameManager = GameManager.Instance;
+        tileManager = TileManager.Instance;
 
         NowConstructWallType = WallType.STRAW;
     }
@@ -279,9 +281,12 @@ public class Pig : MonoBehaviour
         {
             if (gameManager.Wolves[0].isBack())
             {
-                gameManager.Wolves[0].dressUp();
-                gameManager.DressUpCount += 1;
-                gameManager.plusScore(ScoreEvent.DRESSUP);
+                if(tileManager.findCurrentNode(gameManager.Wolves[0].transform.position) == nowLookTile)
+                {
+                    gameManager.Wolves[0].dressUp();
+                    gameManager.DressUpCount += 1;
+                    gameManager.plusScore(ScoreEvent.DRESSUP);
+                }
             }
         }
     }
