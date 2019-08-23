@@ -36,7 +36,7 @@ public class Wolf : MonoBehaviour
 
     [SerializeField] private GameObject windEffectImage;
 
-    private MapNode currentNode;
+    [SerializeField] private MapNode currentNode;
     public MapNode CurrentNode
     {
         get { return currentNode; }
@@ -49,6 +49,8 @@ public class Wolf : MonoBehaviour
     private bool isMove;
     private bool isWait;
     private bool isWind;
+    private bool isStun;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -93,14 +95,18 @@ public class Wolf : MonoBehaviour
         }
         else
         {
-            //대기 중 새로운 경로가 나와도 실행을 못함
-            movePath();
-            if ((summonWolfCntTime > summonWolfTime) && isSummon)
+            if(isStun == false)
             {
-                summonWolfCntTime = 0;
-                summonWolf();
-                isSummon = false;
+                //대기 중 새로운 경로가 나와도 실행을 못함
+                movePath();
+                if ((summonWolfCntTime > summonWolfTime) && isSummon)
+                {
+                    summonWolfCntTime = 0;
+                    summonWolf();
+                    isSummon = false;
+                }
             }
+            
         }
 
     }
@@ -108,7 +114,7 @@ public class Wolf : MonoBehaviour
     {
         findPath.initializePath(node, findPlayerNode());
         yield return null;
-        if (TileManager.Instance.Path.Count > 0)
+        if ((TileManager.Instance.Path.Count > 0) && (isStun == false))
             isWait = false;
     }
     private IEnumerator moveAndRotate()//회전부터 하고 끝나면 이동 시작해야 할듯
@@ -279,7 +285,7 @@ public class Wolf : MonoBehaviour
     public void dressUp()
     {
         //이건 플레이어쪽에서 체크해서 호출됨
-        stun(grandmaClothTime);
+        stun(grandmaClothTime, true);
     }
     private void stun(float time, bool isGrandma = false)
     {
@@ -288,9 +294,11 @@ public class Wolf : MonoBehaviour
         //stunTime에 인수로 전해받은 time을 더한 값을 총 스턴 시간으로 정함
         //지속적으로 호출되지 않도록 조치 취해야 함
         stunTime += time;
+        isStun = true;
         isWait = true;
         StartCoroutine(stunDuration(stunTime, isGrandma));
-        this.GetComponent<SpriteRenderer>().sprite = grandma;
+        if(isGrandma)
+            this.GetComponent<SpriteRenderer>().sprite = grandma;
     }
     private IEnumerator stunDuration(float time, bool isGrandma)
     {
@@ -314,6 +322,7 @@ public class Wolf : MonoBehaviour
         stunCntTime = 0;
         this.GetComponent<SpriteRenderer>().sprite = origin;
         isWait = false;
+        isStun = false;
     }
     public bool isBack()
     {
