@@ -17,7 +17,6 @@ public class Pig : MonoBehaviour
     private float fireResistanceRecoveryTime = 0;
     private float initNoBurnTime = 1;
     private float noBurnTime = 0;
-    private bool isFireResistanceRecovery = false;
 
     private float moveSpeed = 4f;
 
@@ -384,7 +383,6 @@ public class Pig : MonoBehaviour
             burnStatus = BurnStatus.NOBURN;
             noBurnTime = initNoBurnTime;
 
-            isFireResistanceRecovery = false;
             uiManager.showFireResistanceUI(true);
             uiManager.burnEffect();
             spriteObject.GetComponent<SpriteRenderer>().sprite = burnSprites[(int)nowConstructWallType];
