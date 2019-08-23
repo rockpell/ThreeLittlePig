@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    private List<Wolf> wolves;
     [SerializeField] private Wolf mainWolf;
     [SerializeField] private Pig player;
+    [SerializeField] private AudioSource audioSource;
 
     private UIManager uiManager = null;
+    private List<Wolf> wolves;
 
     private int fireCount = 0; // 방화 횟수(방화)
     private int dressUpCount = 0; // 늑대한테 옷 입힌 횟수(절도)
@@ -64,6 +65,7 @@ public class GameManager : Singleton<GameManager>
         {
             isGameEnd = true;
             uiManager.gameEndingUI(decideGameEnding());
+            audioSource.Play();
         }
     }
 
