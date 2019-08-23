@@ -281,7 +281,7 @@ public class Wolf : MonoBehaviour
         //이건 플레이어쪽에서 체크해서 호출됨
         stun(grandmaClothTime);
     }
-    private void stun(float time)
+    private void stun(float time, bool isGrandma = false)
     {
         //해당 함수가 호출되면 늑대가 일정시간 경직(대기)
         //아마 게임매니저에 있을 점수를 올려줘야 함
@@ -289,21 +289,24 @@ public class Wolf : MonoBehaviour
         //지속적으로 호출되지 않도록 조치 취해야 함
         stunTime += time;
         isWait = true;
-        StartCoroutine(stunDuration(stunTime));
-
+        StartCoroutine(stunDuration(stunTime, isGrandma));
+        this.GetComponent<SpriteRenderer>().sprite = grandma;
     }
-    private IEnumerator stunDuration(float time)
+    private IEnumerator stunDuration(float time, bool isGrandma)
     {
         float _indexCounter = 0;
         int _index = 0;
         while (stunCntTime < time)
         {
             stunCntTime += Time.deltaTime;
-            _indexCounter += Time.deltaTime;
-            if (_indexCounter > 0.5f)
+            if(isGrandma == false)
             {
-                _index = (_index + 1) % 2;
-                this.GetComponent<SpriteRenderer>().sprite = stunImage[_index];
+                _indexCounter += Time.deltaTime;
+                if (_indexCounter > 0.5f)
+                {
+                    _index = (_index + 1) % 2;
+                    this.GetComponent<SpriteRenderer>().sprite = stunImage[_index];
+                }
             }
             yield return null;
         }
