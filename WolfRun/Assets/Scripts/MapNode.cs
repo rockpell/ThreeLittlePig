@@ -19,22 +19,100 @@ public class MapNode:MonoBehaviour
     [SerializeField] private int moveCost;
 
     [SerializeField] private MapNode parentNode;
-    private int counter;
+    private float burnCounter;
 
     [SerializeField] private Sprite normalSprite;
     [SerializeField] private Sprite fireSprite;
     [SerializeField] private Sprite[] wallSprite;
+
+    [SerializeField] private int strawBurnTime;
+    [SerializeField] private int woodBurnTime;
+
+    private WallType fireType;
+    private bool isBurn;
+    private List<MapNode> neighbors;
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //주변 노드에 불타는 벽이 있는지 체크
+        //있다면 상태 변경
+        if(isBurn == true)
+        {
+            checkNeighborWall();
+            checkNeighborPig();
+        }
     }
+    private void burn(WallType wallType)
+    {
+        //ChangeState에서 호출 됨
+        //일정 시간동안만 불에 타므로 적절한 IEnumerator 수행
+        //짚/나무 종류에 따라서 타는 시간 달라져야 함 - fireType으로 조절
+        //플러그 세워서 Update에서 체크 함수 수행되도록 함
 
+        int _time = 0;
+        if(wallType == WallType.STRAW)
+        {
+            _time = strawBurnTime;
+        }
+        else if(wallType == WallType.WOOD)
+        {
+            _time = woodBurnTime;
+        }
+        
+        neighbors = TileManager.Instance.getNeighbors(this);
+        StartCoroutine(burnTimeCount(_time));
+        isBurn = true;
+    }
+    private IEnumerator burnTimeCount(int time)
+    {
+        while (burnCounter < time)
+        {
+            burnCounter += Time.deltaTime;
+            yield return null;
+        }
+        isBurn = false;
+        burnCounter = 0;
+    }
+    private void checkNeighborWall()
+    {
+        //주변에 짚이나 나무벽이 있는지 확인
+        //있으면 그것도 불태움
+        if(neighbors.Count > 0)
+        {
+            foreach(MapNode _node in neighbors)
+            {
+                switch(_node.wallState)
+                {
+                    case WallType.STRAW:
+                        _node.changeState(WallType.FIRE);
+                        break;
+                    case WallType.WOOD:
+                        _node.changeState(WallType.FIRE);
+                        break;
+                }
+            }
+        }
+    }
+    private void checkNeighborPig()
+    {
+        //주변에 돼지가 있는지 확인, 있으면 불태움
+
+        if(neighbors.Count > 0)
+        {
+            foreach(MapNode _node in neighbors)
+            {
+                if(TileManager.Instance.findCurrentNode(GameManager.Instance.Player.transform.position) == _node)
+                {
+                    GameManager.Instance.Player.burn();
+                }
+            }
+        }
+    }
     public void changeState(WallType type, bool isHorizontal = true)
     {
         switch(type)
@@ -71,6 +149,7 @@ public class MapNode:MonoBehaviour
                 isPath = false;
                 weight = 0;
                 this.gameObject.GetComponent<SpriteRenderer>().sprite = fireSprite;
+                burn(wallState);
                 //burn함수 호출
                 break;
         }
@@ -88,14 +167,6 @@ public class MapNode:MonoBehaviour
         {
             this.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-    }
-    private void burn()
-    {
-        //주변 노드가 짚/나무벽인 경우 상태를 불태움으로 변경하고 changeState 호출
-        //일정시간동안 불탐 상태 유지
-        //유지하는 동안 주변노드에 돼지가 있으면 데미지
-        //한번 데미지를 받으면 일정시간 이후 데미지
-        //IEnumerator 써야 할듯
     }
 
     public bool IsPath

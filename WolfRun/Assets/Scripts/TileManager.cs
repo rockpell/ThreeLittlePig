@@ -173,6 +173,154 @@ public class TileManager: Singleton<TileManager>
         }
         return _node;
     }
+
+    public List<MapNode> getNeighbors(MapNode node)
+    {
+        int i = 0;
+        int j = 0;
+
+        findNodeIndex(node, out i, out j);
+        List<MapNode> _neighbor = new List<MapNode>();
+        if (i > 0)
+        {
+            if (i < mapLists.Count - 1)
+            {
+                if (j > 0)
+                {
+                    if (j < mapLists[i].nodes.Count - 1)
+                    {
+                        //i, j가 범위 내에 있음 - 모든 경로 가능 - 8방향
+                        if (mapLists[i - 1].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j - 1]);
+                        if (mapLists[i - 1].nodes[j].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j]);
+                        if (mapLists[i - 1].nodes[j + 1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j + 1]);
+                        if (mapLists[i].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i].nodes[j - 1]);
+                        if (mapLists[i].nodes[j + 1].IsPath)
+                            _neighbor.Add(mapLists[i].nodes[j + 1]);
+                        if (mapLists[i + 1].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j - 1]);
+                        if (mapLists[i + 1].nodes[j].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j]);
+                        if (mapLists[i + 1].nodes[j + 1].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j + 1]);
+                    }
+                    else
+                    {
+                        //j +방향 불가능 - 5방향
+                        if (mapLists[i - 1].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j - 1]);
+                        if (mapLists[i - 1].nodes[j].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j]);
+                        if (mapLists[i].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i].nodes[j - 1]);
+                        if (mapLists[i + 1].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j - 1]);
+                        if (mapLists[i + 1].nodes[j].IsPath)
+                            _neighbor.Add(mapLists[i + 1].nodes[j]);
+                    }
+                }
+                else
+                {
+                    //j -방향 불가능 - 5방향
+                    if (mapLists[i - 1].nodes[j].IsPath)
+                        _neighbor.Add(mapLists[i - 1].nodes[j]);
+                    if (mapLists[i - 1].nodes[j + 1].IsPath)
+                        _neighbor.Add(mapLists[i - 1].nodes[j + 1]);
+                    if (mapLists[i].nodes[j + 1].IsPath)
+                        _neighbor.Add(mapLists[i].nodes[j + 1]);
+                    if (mapLists[i + 1].nodes[j].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j]);
+                    if (mapLists[i + 1].nodes[j + 1].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j + 1]);
+                }
+            }
+            else
+            {
+                if (j > 0)
+                {
+                    if (j < mapLists[i].nodes.Count - 1)
+                    {
+                        //i가 범위에 걸쳤음 -> +방향 불가능 - 5방향
+                        if (mapLists[i - 1].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j - 1]);
+                        if (mapLists[i - 1].nodes[j].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j]);
+                        if (mapLists[i - 1].nodes[j + 1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j + 1]);
+                        if (mapLists[i].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i].nodes[j - 1]);
+                        if (mapLists[i].nodes[j + 1].IsPath)
+                            _neighbor.Add(mapLists[i].nodes[j + 1]);
+                    }
+                    else
+                    {
+                        //i, j가 범위에 걸침 -> +방향 불가능
+                        if (mapLists[i - 1].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j - 1]);
+                        if (mapLists[i - 1].nodes[j].IsPath)
+                            _neighbor.Add(mapLists[i - 1].nodes[j]);
+                        if (mapLists[i].nodes[j - 1].IsPath)
+                            _neighbor.Add(mapLists[i].nodes[j - 1]);
+                    }
+                }
+                else
+                {
+                    //i는 +방향 불가능, j는 -방향 불가능
+                    if (mapLists[i - 1].nodes[j].IsPath)
+                        _neighbor.Add(mapLists[i - 1].nodes[j]);
+                    if (mapLists[i - 1].nodes[j + 1].IsPath)
+                        _neighbor.Add(mapLists[i - 1].nodes[j + 1]);
+                    if (mapLists[i].nodes[j + 1].IsPath)
+                        _neighbor.Add(mapLists[i].nodes[j + 1]);
+                }
+            }
+        }
+        else
+        {
+            if (j > 0)
+            {
+                if (j < mapLists[i].nodes.Count - 1)
+                {
+                    //i는 -방향 불가능
+                    if (mapLists[i].nodes[j - 1].IsPath)
+                        _neighbor.Add(mapLists[i].nodes[j - 1]);
+                    if (mapLists[i].nodes[j + 1].IsPath)
+                        _neighbor.Add(mapLists[i].nodes[j + 1]);
+                    if (mapLists[i + 1].nodes[j - 1].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j - 1]);
+                    if (mapLists[i + 1].nodes[j].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j]);
+                    if (mapLists[i + 1].nodes[j + 1].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j + 1]);
+                }
+                else
+                {
+                    //i -방향 불가능, j는 +방향 불가능
+                    if (mapLists[i].nodes[j - 1].IsPath)
+                        _neighbor.Add(mapLists[i].nodes[j - 1]);
+                    if (mapLists[i + 1].nodes[j - 1].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j - 1]);
+                    if (mapLists[i + 1].nodes[j].IsPath)
+                        _neighbor.Add(mapLists[i + 1].nodes[j]);
+                }
+            }
+            else
+            {
+                //i, j -방향 불가능
+                if (mapLists[i].nodes[j + 1].IsPath)
+                    _neighbor.Add(mapLists[i].nodes[j + 1]);
+                if (mapLists[i + 1].nodes[j].IsPath)
+                    _neighbor.Add(mapLists[i + 1].nodes[j]);
+                if (mapLists[i + 1].nodes[j + 1].IsPath)
+                    _neighbor.Add(mapLists[i + 1].nodes[j + 1]);
+            }
+        }
+        return _neighbor;
+    }
+
     void Start()
     {
         
