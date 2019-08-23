@@ -294,8 +294,8 @@ public class UIManager : Singleton<UIManager>
 
     public void gameEndingUI(GameEnding gameEnding)
     {
-        endingObject.GetComponent<EndingUI>().settingGameEnding(gameEnding);
         endingObject.SetActive(true);
+        endingObject.GetComponent<EndingUI>().settingGameEnding(gameEnding);
     }
 
     [ContextMenu("Do Something")]
