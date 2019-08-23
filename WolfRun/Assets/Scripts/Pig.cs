@@ -258,10 +258,14 @@ public class Pig : MonoBehaviour
 
     private void fireWall()
     {
-        Debug.Log("fireWall");
+        bool _isHorizental = true;
+        float _distance = nowLookTile.transform.position.y - transform.position.y;
+        if (-0.64 < _distance && _distance < 0.64)
+            _isHorizental = false;
+
         if (nowLookTile != null)
         {
-            nowLookTile.changeState(WallType.FIRE);
+            nowLookTile.changeState(WallType.FIRE, _isHorizental);
             gameManager.FireCount += 1;
         }
     }
@@ -284,7 +288,8 @@ public class Pig : MonoBehaviour
         if (!isActing)
         {
             nowLookTile = tile;
-            uiManager.setOutlineTile(nowLookTile.transform.position);
+            if(nowLookTile != null)
+                uiManager.setOutlineTile(nowLookTile.transform.position);
         }
     }
 
