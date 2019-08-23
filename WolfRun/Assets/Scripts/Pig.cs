@@ -234,7 +234,7 @@ public class Pig : MonoBehaviour
                 {
                     nowLookTile.changeState(WallType.NONE);
                     gameManager.DestroyCount += 1;
-                    //gameManager.Wolves[0].checkBrokenWall(nowLookTile);
+                    gameManager.Wolves[0].checkBrokenWall(nowLookTile);
                 }
             }
         }
@@ -276,7 +276,7 @@ public class Pig : MonoBehaviour
         {
             if (gameManager.Wolves[0].isBack())
             {
-                gameManager.Wolves[0].grandmaCloth();
+                gameManager.Wolves[0].dressUp();
                 gameManager.DressUpCount += 1;
                 gameManager.plusScore(ScoreEvent.DRESSUP);
             }
