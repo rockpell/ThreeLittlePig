@@ -20,18 +20,28 @@ public class Wolf : MonoBehaviour
     [SerializeField] private float findPathTime;
     private float findPathCntTime;
 
+    //스킬 사용 쿨타임
+    [SerializeField] private float windTime;
+    private float windCntTime;
+    //대기 시간
     private float windTimer;
 
-    private float stunTimer;
+    [SerializeField] private float brokenWallTime;
+    [SerializeField] private float grandmaClothTime;
+    private float stunTime;
+    private float stunCntTime;
+    [SerializeField] private Sprite[] stunImage;
+    [SerializeField] private Sprite grandma;
+    [SerializeField] private Sprite origin;
 
-    [SerializeField] private MapNode currentNode;
+    private MapNode currentNode;
     public MapNode CurrentNode
     {
         get { return currentNode; }
     }
 
     private List<MapNode> path;
-    [SerializeField] private MapNode nextMoveNode;
+    private MapNode nextMoveNode;
     private GameObject player;
 
     private bool isMove;
@@ -212,7 +222,7 @@ public class Wolf : MonoBehaviour
         //기다리는 동안 바람을 부는듯한 이펙트 재생
         if(isWait == false)
         {
-            windEffect(weight);
+            StartCoroutine(windEffect(weight));
             StartCoroutine(windIdle(weight, node));
         }
     }
@@ -233,11 +243,12 @@ public class Wolf : MonoBehaviour
         isWait = false;
     }
 
-    private void windEffect(int time)
+    private IEnumerator windEffect(int time)
     {
         //time만큼 바람 부는듯한 느낌 주도록 애니메이션이든 파티클이든 재생
         //이미지 변경하는걸로 됨
-
+        //바람이미지 깜박이는 정도로 하면 될꺼 같은데 
+        yield return null;
     }
     private void howling()
     {
@@ -248,32 +259,44 @@ public class Wolf : MonoBehaviour
 
     public void checkBrokenWall(MapNode node)
     {
-        //stun(time);
+        //부순 맵 노드를 매개변수로 알려줌
+        //여기서 늑대 위치랑 node랑 비교해서 같으면 stun 호출
+        if(node == TileManager.Instance.findCurrentNode(this.transform.position))
+            stun(brokenWallTime);
     }
-    public void grandmaCloth()
+    public void dressUp()
     {
-        //stun(time);
+        //이건 플레이어쪽에서 체크해서 호출됨
+        stun(grandmaClothTime);
     }
-    private void stun(int time)
+    private void stun(float time)
     {
         //해당 함수가 호출되면 늑대가 일정시간 경직(대기)
         //아마 게임매니저에 있을 점수를 올려줘야 함
-        if(isWait == false)
-        {
-            isWait = true;
-            stunTimer = 0;
-            StartCoroutine(stunDuration(time));
-        }
+        //stunTime에 인수로 전해받은 time을 더한 값을 총 스턴 시간으로 정함
+        //지속적으로 호출되지 않도록 조치 취해야 함
+        stunTime += time;
+        isWait = true;
+        StartCoroutine(stunDuration(stunTime));
         
     }
-    private IEnumerator stunDuration(int time)
+    private IEnumerator stunDuration(float time)
     {
-        while(stunTimer < time)
+        float _indexCounter = 0;
+        int _index = 0;
+        while(stunCntTime < time)
         {
-            stunTimer += Time.deltaTime;
+            stunCntTime += Time.deltaTime;
+            _indexCounter += Time.deltaTime;
+            if(_indexCounter > 0.5f)
+            {
+                _index = (_index + 1) % 2;
+                this.GetComponent<SpriteRenderer>().sprite = stunImage[_index];
+            }
             yield return null;
         }
-        
+        this.GetComponent<SpriteRenderer>().sprite = origin;
+        isWait = false;
     }
     public bool isBack()
     {
