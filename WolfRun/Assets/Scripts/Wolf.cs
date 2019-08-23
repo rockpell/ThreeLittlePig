@@ -295,6 +295,7 @@ public class Wolf : MonoBehaviour
             }
             yield return null;
         }
+        stunCntTime = 0;
         this.GetComponent<SpriteRenderer>().sprite = origin;
         isWait = false;
     }
