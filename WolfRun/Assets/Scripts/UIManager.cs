@@ -17,6 +17,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject actingTextObject;
     [SerializeField] private Transform outlineObject;
     [SerializeField] private GameObject fireResistanceObject;
+    [SerializeField] private Image bloodImage;
 
     private float deltaTime;
 
@@ -278,6 +279,19 @@ public class UIManager : Singleton<UIManager>
         {
             fireResistanceImage.color = dangerColor;
         }
+    }
+
+    public void burnEffect()
+    {
+        StartCoroutine(ShowBloodEffect());
+    }
+
+    private IEnumerator ShowBloodEffect()
+    {
+        bloodImage.gameObject.SetActive(true);
+        bloodImage.color = new Color(1, 0, 0, Random.Range(0.4f, 0.5f));
+        yield return new WaitForSeconds(0.2f);
+        bloodImage.gameObject.SetActive(false);
     }
 
     public void gameEndingUI(GameEnding gameEnding)

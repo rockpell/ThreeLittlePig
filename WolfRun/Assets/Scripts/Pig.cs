@@ -381,7 +381,7 @@ public class Pig : MonoBehaviour
 
             isFireResistanceRecovery = false;
             uiManager.showFireResistanceUI(true);
-
+            uiManager.burnEffect();
             spriteObject.GetComponent<SpriteRenderer>().sprite = burnSprites[(int)nowConstructWallType];
         }
     }
