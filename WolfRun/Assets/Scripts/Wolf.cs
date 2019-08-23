@@ -305,6 +305,7 @@ public class Wolf : MonoBehaviour
                 if (_indexCounter > 0.5f)
                 {
                     _index = (_index + 1) % 2;
+                    _indexCounter = 0;
                     this.GetComponent<SpriteRenderer>().sprite = stunImage[_index];
                 }
             }
