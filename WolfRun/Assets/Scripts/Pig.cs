@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Pig : MonoBehaviour
 {
-    [SerializeField] Transform spriteObject;
-    [SerializeField] Sprite[] sprites;
-    [SerializeField] Sprite[] burnSprites;
-    [SerializeField] PigAudio pigAudio;
+    [SerializeField] Transform spriteObject = null;
+    [SerializeField] Sprite[] sprites = null;
+    [SerializeField] Sprite[] burnSprites = null;
+    [SerializeField] PigAudio pigAudio = null;
 
     private WallType nowConstructWallType = WallType.STRAW;
 
@@ -234,12 +234,13 @@ public class Pig : MonoBehaviour
         {
             if (nowLookTile != null)
             {
-                if(nowLookTile.WallState == WallType.WOOD || nowLookTile.WallState == WallType.BRICK)
+                if(nowLookTile.WallState == WallType.STRAW 
+                    || nowLookTile.WallState == WallType.WOOD || nowLookTile.WallState == WallType.BRICK)
                 {
                     Debug.Log("destroyWall");
-                    nowLookTile.changeState(WallType.NONE);
                     gameManager.DestroyCount += 1;
                     gameManager.Wolves[0].checkBrokenWall(nowLookTile);
+                    nowLookTile.changeState(WallType.NONE);
                 }
             }
         }
