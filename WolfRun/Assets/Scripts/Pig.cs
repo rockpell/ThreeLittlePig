@@ -126,9 +126,7 @@ public class Pig : MonoBehaviour
                     constructionWall(nowConstructWallType);
                 else if(nowAct == Act.FIRE)
                     fireWall();
-                isActing = false;
-                nowAct = Act.NONE;
-                uiManager.showActingText(false);
+                cancelActing();
             }
         }
 
@@ -225,8 +223,6 @@ public class Pig : MonoBehaviour
                 break;
         }
         gameManager.ConstructionCount += 1;
-
-        pigAudio.stopSound();
     }
 
     public void destroyWall() // 나무, 벽돌 벽일 경우에만 작동 가능
@@ -238,7 +234,6 @@ public class Pig : MonoBehaviour
                 if(nowLookTile.WallState == WallType.STRAW 
                     || nowLookTile.WallState == WallType.WOOD || nowLookTile.WallState == WallType.BRICK)
                 {
-                    Debug.Log("destroyWall");
                     gameManager.DestroyCount += 1;
                     gameManager.Wolves[0].checkBrokenWall(nowLookTile);
                     nowLookTile.changeState(WallType.NONE);
@@ -332,6 +327,30 @@ public class Pig : MonoBehaviour
         }
     }
 
+    private void setActing(float burstTime, Act nowAct = Act.NONE)
+    {
+        isActing = true;
+        this.nowAct = nowAct;
+        if (nowAct == Act.FIRE)
+        {
+            uiManager.showActingText(true, Act.FIRE);
+        }
+        else if (nowAct == Act.CONSTRUTION)
+        {
+            uiManager.showActingText(true, Act.CONSTRUTION);
+        }
+        leftActTime = burstTime;
+        originActTime = burstTime;
+    }
+
+    public void cancelActing()
+    {
+        isActing = false;
+        nowAct = Act.NONE;
+        uiManager.showActingText(false);
+        pigAudio.stopSound();
+    }
+
     public WallType NowConstructWallType {
         get { return nowConstructWallType; }
         set 
@@ -371,22 +390,6 @@ public class Pig : MonoBehaviour
     public float getLeftActGuage()
     {
         return 1 - (leftActTime / originActTime);
-    }
-
-    private void setActing(float burstTime, Act nowAct = Act.NONE)
-    {
-        isActing = true;
-        this.nowAct = nowAct;
-        if(nowAct == Act.FIRE)
-        {
-            uiManager.showActingText(true, Act.FIRE);
-        }
-        else if(nowAct == Act.CONSTRUTION)
-        {
-            uiManager.showActingText(true, Act.CONSTRUTION);
-        }
-        leftActTime = burstTime;
-        originActTime = burstTime;
     }
 
     [ContextMenu("burn")]

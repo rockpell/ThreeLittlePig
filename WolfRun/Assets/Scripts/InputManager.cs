@@ -58,5 +58,10 @@ public class InputManager : MonoBehaviour
                 nowPlayer.wheelNowConstructWallType(wheelValue);
             }
         }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0) || Input.GetKeyUp(KeyCode.F))
+        {
+            nowPlayer.cancelActing();
+        }
     }
 }
