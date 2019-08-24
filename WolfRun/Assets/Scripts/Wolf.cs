@@ -273,30 +273,33 @@ public class Wolf : MonoBehaviour
     {
         //부순 맵 노드를 매개변수로 알려줌
         //맵 노드 주변노드를 찾고 늑대의 현재 노드와 같다면 스턴함수 호출
-        List<MapNode> _neighbors = TileManager.Instance.getNeighbors(node);
-        
-        foreach(MapNode _node in _neighbors)
+        if(isStun == false)
         {
-            if (_node == TileManager.Instance.findCurrentNode(this.transform.position))
+            List<MapNode> _neighbors = TileManager.Instance.getNeighbors(node);
+
+            foreach (MapNode _node in _neighbors)
             {
-                stun(brokenWallTime);
-                switch (node.WallState)
+                if (_node == TileManager.Instance.findCurrentNode(this.transform.position))
                 {
-                    case WallType.BRICK:
-                        brokenWallTime = 3;
-                        GameManager.Instance.plusScore(ScoreEvent.STUN_BRICK);
-                        break;
-                    case WallType.STRAW:
-                        brokenWallTime = 0.5f;
-                        GameManager.Instance.plusScore(ScoreEvent.STUN_STRAW);
-                        break;
-                    case WallType.WOOD:
-                        brokenWallTime = 2;
-                        GameManager.Instance.plusScore(ScoreEvent.STUN_WOOD);
-                        break;
-                    default:
-                        brokenWallTime = 0;
-                        break;
+                    stun(brokenWallTime);
+                    switch (node.WallState)
+                    {
+                        case WallType.BRICK:
+                            brokenWallTime = 3;
+                            GameManager.Instance.plusScore(ScoreEvent.STUN_BRICK);
+                            break;
+                        case WallType.STRAW:
+                            brokenWallTime = 0.5f;
+                            GameManager.Instance.plusScore(ScoreEvent.STUN_STRAW);
+                            break;
+                        case WallType.WOOD:
+                            brokenWallTime = 2;
+                            GameManager.Instance.plusScore(ScoreEvent.STUN_WOOD);
+                            break;
+                        default:
+                            brokenWallTime = 0;
+                            break;
+                    }
                 }
             }
         }
@@ -323,6 +326,7 @@ public class Wolf : MonoBehaviour
     {
         float _indexCounter = 0;
         int _index = 0;
+        this.GetComponent<SpriteRenderer>().sprite = stunImage[_index];
         while (stunCntTime < time)
         {
             stunCntTime += Time.deltaTime;
@@ -339,6 +343,7 @@ public class Wolf : MonoBehaviour
             yield return null;
         }
         stunCntTime = 0;
+        stunTime = 0;
         this.GetComponent<SpriteRenderer>().sprite = origin;
         isWait = false;
         isStun = false;
