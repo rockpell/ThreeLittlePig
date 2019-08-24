@@ -37,6 +37,9 @@ public class Wolf : MonoBehaviour
     [SerializeField] private GameObject windEffectImage;
 
     [SerializeField] private MapNode currentNode;
+
+    [SerializeField] private AudioSource audio;
+
     public MapNode CurrentNode
     {
         get { return currentNode; }
@@ -95,7 +98,7 @@ public class Wolf : MonoBehaviour
         }
         else
         {
-            if(isStun == false)
+            if((isStun == false) && (isWind == false))
             {
                 //대기 중 새로운 경로가 나와도 실행을 못함
                 movePath();
@@ -114,7 +117,7 @@ public class Wolf : MonoBehaviour
     {
         findPath.initializePath(node, findPlayerNode());
         yield return null;
-        if ((TileManager.Instance.Path.Count > 0) && (isStun == false))
+        if ((TileManager.Instance.Path.Count > 0) && (isStun == false) && (isWind == false))
             isWait = false;
     }
     private IEnumerator moveAndRotate()//회전부터 하고 끝나면 이동 시작해야 할듯
@@ -266,7 +269,7 @@ public class Wolf : MonoBehaviour
         float _eulerAngle = Quaternion.FromToRotation(Vector3.up, _direction).eulerAngles.z;
 
         GameObject windImage = Instantiate(windEffectImage, node.transform.position, Quaternion.Euler(0, 0, _eulerAngle));
-        windImage.GetComponent<WindEffect>().initializeTime(time);
+        windImage.GetComponent<WindEffect>().initializeNodeTime(time, node);
     }
     private void howling()
     {

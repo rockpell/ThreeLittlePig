@@ -13,14 +13,18 @@ public class WindEffect : MonoBehaviour
     [SerializeField] private float tinkleTime;
     private float tinkleCntTime;
     private int index;
+    private MapNode node;
+    [SerializeField] private AudioSource audio;
 
     void Start()
     {
         
     }
-    public void initializeTime(float time)
+    public void initializeNodeTime(float time, MapNode node)
     {
         duration = time;
+        this.node = node;
+        audio.Play();
         index = 0;
     }
     // Update is called once per frame
@@ -28,8 +32,14 @@ public class WindEffect : MonoBehaviour
     {
         durationCnt += Time.deltaTime;
         tinkleCntTime += Time.deltaTime;
+        if(node.WallState == WallType.NONE)
+        {
+            audio.Stop();
+            Destroy(this.gameObject);
+        }
         if (durationCnt > duration)
         {
+            audio.Stop();
             Destroy(this.gameObject);
         }
         if (tinkleCntTime > tinkleTime)

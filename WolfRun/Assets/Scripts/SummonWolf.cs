@@ -11,9 +11,11 @@ public class SummonWolf : MonoBehaviour
     {
         set { node = value; }
     }
+    [SerializeField] private AudioSource audio;
+
     void Start()
     {
-        
+        audio.Play();
     }
 
     // Update is called once per frame
@@ -26,6 +28,7 @@ public class SummonWolf : MonoBehaviour
             {
                 node.changeState(WallType.NONE);
             }
+            audio.Stop();
             Destroy(this.gameObject);
         }
     }
