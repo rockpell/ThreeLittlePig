@@ -278,9 +278,30 @@ public class Wolf : MonoBehaviour
     public void checkBrokenWall(MapNode node)
     {
         //부순 맵 노드를 매개변수로 알려줌
-        //여기서 늑대 위치랑 node랑 비교해서 같으면 stun 호출
-        if (node == TileManager.Instance.findCurrentNode(this.transform.position))
-            stun(brokenWallTime);
+        //맵 노드 주변노드를 찾고 늑대의 현재 노드와 같다면 스턴함수 호출
+        List<MapNode> _neighbors = TileManager.Instance.getNeighbors(node);
+        
+        switch(node.WallState)
+        {
+            case WallType.BRICK:
+                brokenWallTime = 3;
+                break;
+            case WallType.STRAW:
+                brokenWallTime = 0.5f;
+                break;
+            case WallType.WOOD:
+                brokenWallTime = 2;
+                break;
+            default:
+                brokenWallTime = 0;
+                break;
+        }
+
+        foreach(MapNode _node in _neighbors)
+        {
+            if (_node == TileManager.Instance.findCurrentNode(this.transform.position))
+                stun(brokenWallTime);
+        }
     }
     public void dressUp()
     {
