@@ -50,8 +50,14 @@ public class GameManager : Singleton<GameManager>
     {
         switch (scoreEvent)
         {
-            case ScoreEvent.STUN:
-                plusScore(100);
+            case ScoreEvent.STUN_STRAW:
+                plusScore(30);
+                break;
+            case ScoreEvent.STUN_WOOD:
+                plusScore(70);
+                break;
+            case ScoreEvent.STUN_BRICK:
+                plusScore(150);
                 break;
             case ScoreEvent.DRESSUP:
                 plusScore(300);
