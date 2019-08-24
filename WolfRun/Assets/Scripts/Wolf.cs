@@ -38,8 +38,6 @@ public class Wolf : MonoBehaviour
 
     [SerializeField] private MapNode currentNode;
 
-    [SerializeField] private AudioSource audio;
-
     public MapNode CurrentNode
     {
         get { return currentNode; }
@@ -271,13 +269,6 @@ public class Wolf : MonoBehaviour
         GameObject windImage = Instantiate(windEffectImage, node.transform.position, Quaternion.Euler(0, 0, _eulerAngle));
         windImage.GetComponent<WindEffect>().initializeNodeTime(time, node);
     }
-    private void howling()
-    {
-        //돼지와 일정거리 이상 떨어졌고 쿨타임이 돌아온 경우 호출
-        //돼지를 일정시간 경직시킨다
-        //사운드 재생
-    }
-
     public void checkBrokenWall(MapNode node)
     {
         //부순 맵 노드를 매개변수로 알려줌
