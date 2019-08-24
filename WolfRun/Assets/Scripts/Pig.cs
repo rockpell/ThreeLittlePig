@@ -25,6 +25,7 @@ public class Pig : MonoBehaviour
     private float[] cooldownWall = new float[3]; // 짚, 나무 벽돌 건설 쿨타임
     private float[] leftCooldown = new float[3]; // 남은 쿨타임
 
+    private float originActTime = 0;
     private float leftActTime = 0;
     private bool isActing = false;
 
@@ -367,6 +368,11 @@ public class Pig : MonoBehaviour
         return transform.GetChild(1).position;
     }
 
+    public float getLeftActGuage()
+    {
+        return 1 - (leftActTime / originActTime);
+    }
+
     private void setActing(float burstTime, Act nowAct = Act.NONE)
     {
         isActing = true;
@@ -380,6 +386,7 @@ public class Pig : MonoBehaviour
             uiManager.showActingText(true, Act.CONSTRUTION);
         }
         leftActTime = burstTime;
+        originActTime = burstTime;
     }
 
     [ContextMenu("burn")]

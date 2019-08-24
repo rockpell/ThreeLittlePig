@@ -15,6 +15,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject fireTextObject;
     [SerializeField] private GameObject endingObject;
     [SerializeField] private GameObject actingTextObject;
+    [SerializeField] private Image actingGauage;
     [SerializeField] private Transform outlineObject;
     [SerializeField] private GameObject fireResistanceObject;
     [SerializeField] private Image bloodImage;
@@ -22,6 +23,7 @@ public class UIManager : Singleton<UIManager>
     private float deltaTime;
 
     private bool isFireResistanceUI;
+    private bool isActingGauage;
 
     private GameManager gameManager;
 
@@ -70,6 +72,11 @@ public class UIManager : Singleton<UIManager>
                 changeColorFireUI(_value);
                 fireResistanceUI.sizeDelta = new Vector2(fireResistanceUIWidth * (_value/100), fireResistanceUIHeight);
             }
+        }
+
+        if (isActingGauage)
+        {
+            actingGauage.fillAmount = gameManager.Player.getLeftActGuage();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -233,7 +240,11 @@ public class UIManager : Singleton<UIManager>
             if (value)
             {
                 string _actText = "";
-                if(nowAct == Act.FIRE)
+
+                isActingGauage = true;
+                actingGauage.fillAmount = 0;
+
+                if (nowAct == Act.FIRE)
                 {
                     _actText = "벽에 불을 붙히는 중";
                 }
@@ -242,7 +253,11 @@ public class UIManager : Singleton<UIManager>
                     _actText = "벽을 만드는 중";
                 }
 
-                actingTextObject.transform.GetChild(0).GetComponent<Text>().text = _actText;
+                actingTextObject.transform.GetChild(1).GetComponent<Text>().text = _actText;
+            }
+            else
+            {
+                isActingGauage = false;
             }
             actingTextObject.SetActive(value);
         }
