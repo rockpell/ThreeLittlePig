@@ -275,26 +275,30 @@ public class Wolf : MonoBehaviour
         //맵 노드 주변노드를 찾고 늑대의 현재 노드와 같다면 스턴함수 호출
         List<MapNode> _neighbors = TileManager.Instance.getNeighbors(node);
         
-        switch(node.WallState)
-        {
-            case WallType.BRICK:
-                brokenWallTime = 3;
-                break;
-            case WallType.STRAW:
-                brokenWallTime = 0.5f;
-                break;
-            case WallType.WOOD:
-                brokenWallTime = 2;
-                break;
-            default:
-                brokenWallTime = 0;
-                break;
-        }
-
         foreach(MapNode _node in _neighbors)
         {
             if (_node == TileManager.Instance.findCurrentNode(this.transform.position))
+            {
                 stun(brokenWallTime);
+                switch (node.WallState)
+                {
+                    case WallType.BRICK:
+                        brokenWallTime = 3;
+                        GameManager.Instance.plusScore(ScoreEvent.STUN_BRICK);
+                        break;
+                    case WallType.STRAW:
+                        brokenWallTime = 0.5f;
+                        GameManager.Instance.plusScore(ScoreEvent.STUN_STRAW);
+                        break;
+                    case WallType.WOOD:
+                        brokenWallTime = 2;
+                        GameManager.Instance.plusScore(ScoreEvent.STUN_WOOD);
+                        break;
+                    default:
+                        brokenWallTime = 0;
+                        break;
+                }
+            }
         }
     }
     public void dressUp()
