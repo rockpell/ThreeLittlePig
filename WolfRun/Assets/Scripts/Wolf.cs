@@ -53,6 +53,8 @@ public class Wolf : MonoBehaviour
 
     void Start()
     {
+        beatSound.Play();
+        beatSound.loop = true;
         player = GameObject.FindGameObjectWithTag("Player");
         //늑대의 현재 타일을 저장
         currentNode = TileManager.Instance.findCurrentNode(this.transform.position);
@@ -383,6 +385,7 @@ public class Wolf : MonoBehaviour
             if(isBack() != true)
             {
                 GameManager.Instance.Player.dead();
+                beatSound.Stop();
             }
         }
     }
