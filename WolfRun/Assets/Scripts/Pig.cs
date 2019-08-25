@@ -46,9 +46,9 @@ public class Pig : MonoBehaviour
 
     void Awake()
     {
-        constructionTime[0] = 1.0f;
-        constructionTime[1] = 2.0f;
-        constructionTime[2] = 3.0f;
+        constructionTime[0] = 0.8f;
+        constructionTime[1] = 1.4f;
+        constructionTime[2] = 2.0f;
 
         cooldownWall[0] = 1.0f;
         cooldownWall[1] = 2.0f;
