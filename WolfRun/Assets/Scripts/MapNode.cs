@@ -57,10 +57,12 @@ public class MapNode:MonoBehaviour
         int _time = 0;
         if(wallType == WallType.STRAW)
         {
+            GameManager.Instance.plusScore(ScoreEvent.FIRE_STRAW);
             _time = strawBurnTime;
         }
         else if(wallType == WallType.WOOD)
         {
+            GameManager.Instance.plusScore(ScoreEvent.FIRE_WOOD);
             _time = woodBurnTime;
         }
         
