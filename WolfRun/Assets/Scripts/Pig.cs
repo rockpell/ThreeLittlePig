@@ -42,6 +42,7 @@ public class Pig : MonoBehaviour
     private TileManager tileManager = null;
 
     private float deltaTime = 0;
+    private bool isDead = false;
 
     void Awake()
     {
@@ -70,6 +71,9 @@ public class Pig : MonoBehaviour
 
     void Update()
     {
+        if (isDead)
+            return;
+
         deltaTime += Time.deltaTime;
 
         if (deltaTime > 0.2f)
@@ -392,7 +396,6 @@ public class Pig : MonoBehaviour
         return 1 - (leftActTime / originActTime);
     }
 
-    [ContextMenu("burn")]
     public void burn()
     {
         if(burnStatus != BurnStatus.NOBURN)
@@ -407,5 +410,12 @@ public class Pig : MonoBehaviour
             uiManager.burnEffect();
             spriteObject.GetComponent<SpriteRenderer>().sprite = burnSprites[(int)nowConstructWallType];
         }
+    }
+
+    [ContextMenu("dead")]
+    public void dead()
+    {
+        isDead = true;
+        gameManager.gameEnd();
     }
 }
