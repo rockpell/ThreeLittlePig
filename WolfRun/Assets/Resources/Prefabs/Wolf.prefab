@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4619732985097838207}
   - component: {fileID: 4619732985097838206}
   - component: {fileID: 2329085119081600302}
+  - component: {fileID: 5677692241260008027}
   m_Layer: 0
   m_Name: Wolf
   m_TagString: Untagged
@@ -110,6 +111,7 @@ MonoBehaviour:
   origin: {fileID: 21300000, guid: a4b7ed80c5ffbdb448f71741a9030971, type: 3}
   windEffectImage: {fileID: 5898951886197440590, guid: 3a98d61d4c980334faf6a5955148b11c,
     type: 3}
+  currentNode: {fileID: 0}
 --- !u!114 &2329085119081600302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,3 +124,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449f6281be30d684b99c4b692947345b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!58 &5677692241260008027
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4619732985097838201}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.64

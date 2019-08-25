@@ -281,7 +281,8 @@ public class Wolf : MonoBehaviour
             {
                 if (_node == TileManager.Instance.findCurrentNode(this.transform.position))
                 {
-                    stun(brokenWallTime);
+                    isStun = true;
+                    isWait = true;
                     switch (node.WallState)
                     {
                         case WallType.BRICK:
@@ -300,6 +301,7 @@ public class Wolf : MonoBehaviour
                             brokenWallTime = 0;
                             break;
                     }
+                    stun(brokenWallTime);
                 }
             }
         }
@@ -307,6 +309,8 @@ public class Wolf : MonoBehaviour
     public void dressUp()
     {
         //이건 플레이어쪽에서 체크해서 호출됨
+        isWait = true;
+        isStun = true;
         stun(grandmaClothTime, true);
     }
     private void stun(float time, bool isGrandma = false)
@@ -316,8 +320,7 @@ public class Wolf : MonoBehaviour
         //stunTime에 인수로 전해받은 time을 더한 값을 총 스턴 시간으로 정함
         //지속적으로 호출되지 않도록 조치 취해야 함
         stunTime += time;
-        isStun = true;
-        isWait = true;
+        Debug.Log("Stun");
         StartCoroutine(stunDuration(stunTime, isGrandma));
         if(isGrandma)
             this.GetComponent<SpriteRenderer>().sprite = grandma;
@@ -363,5 +366,16 @@ public class Wolf : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Player")
+        {
+            if(isBack() != true)
+            {
+                GameManager.Instance.Player.dead();
+            }
+        }
     }
 }
