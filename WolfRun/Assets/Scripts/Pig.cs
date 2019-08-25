@@ -268,7 +268,7 @@ public class Pig : MonoBehaviour
 
     private void tryFireWall()
     {
-        setActing(1, Act.FIRE);
+        setActing(0.5f, Act.FIRE);
     }
 
     private void fireWall()
