@@ -71,8 +71,11 @@ public class GameManager : Singleton<GameManager>
             case ScoreEvent.CONSTRUTION_BRICK:
                 plusScore(12);
                 break;
-            case ScoreEvent.FIRE:
+            case ScoreEvent.FIRE_STRAW:
                 plusScore(6);
+                break;
+            case ScoreEvent.FIRE_WOOD:
+                plusScore(15);
                 break;
         }
     }

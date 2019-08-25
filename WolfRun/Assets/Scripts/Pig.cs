@@ -279,9 +279,17 @@ public class Pig : MonoBehaviour
 
         if (nowLookTile != null)
         {
-            nowLookTile.changeState(WallType.FIRE, _isHorizental);
             gameManager.FireCount += 1;
-            gameManager.plusScore(ScoreEvent.FIRE);
+            if(nowLookTile.WallState == WallType.STRAW)
+            {
+                gameManager.plusScore(ScoreEvent.FIRE_STRAW);
+            }
+            else if(nowLookTile.WallState == WallType.WOOD)
+            {
+                gameManager.plusScore(ScoreEvent.FIRE_WOOD);
+            }
+
+            nowLookTile.changeState(WallType.FIRE, _isHorizental);
         }
     }
 
