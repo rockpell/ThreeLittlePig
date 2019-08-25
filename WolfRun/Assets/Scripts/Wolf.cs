@@ -389,4 +389,8 @@ public class Wolf : MonoBehaviour
             }
         }
     }
+    public void soundEnd()
+    {
+        beatSound.Stop();
+    }
 }
