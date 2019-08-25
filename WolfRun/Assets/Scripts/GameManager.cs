@@ -62,6 +62,18 @@ public class GameManager : Singleton<GameManager>
             case ScoreEvent.DRESSUP:
                 plusScore(300);
                 break;
+            case ScoreEvent.CONSTRUTION_STRAW:
+                plusScore(2);
+                break;
+            case ScoreEvent.CONSTRUTION_WOOD:
+                plusScore(5);
+                break;
+            case ScoreEvent.CONSTRUTION_BRICK:
+                plusScore(12);
+                break;
+            case ScoreEvent.FIRE:
+                plusScore(6);
+                break;
         }
     }
 

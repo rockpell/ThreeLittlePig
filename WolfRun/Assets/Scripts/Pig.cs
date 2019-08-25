@@ -208,24 +208,28 @@ public class Pig : MonoBehaviour
         if (-0.64 < _distance && _distance < 0.64)
             _isHorizental = false;
 
-        switch (wallType)
+        if (nowLookTile != null)
         {
-            case WallType.STRAW:
-                leftCooldown[0] = cooldownWall[0];
-                if(nowLookTile != null)
+            switch (wallType)
+            {
+                case WallType.STRAW:
+                    leftCooldown[0] = cooldownWall[0];
                     nowLookTile.changeState(WallType.STRAW, _isHorizental);
-                break;
-            case WallType.WOOD:
-                leftCooldown[1] = cooldownWall[1];
-                if (nowLookTile != null)
+                    gameManager.plusScore(ScoreEvent.CONSTRUTION_STRAW);
+                    break;
+                case WallType.WOOD:
+                    leftCooldown[1] = cooldownWall[1];
                     nowLookTile.changeState(WallType.WOOD, _isHorizental);
-                break;
-            case WallType.BRICK:
-                leftCooldown[2] = cooldownWall[2];
-                if (nowLookTile != null)
+                    gameManager.plusScore(ScoreEvent.CONSTRUTION_WOOD);
+                    break;
+                case WallType.BRICK:
+                    leftCooldown[2] = cooldownWall[2];
                     nowLookTile.changeState(WallType.BRICK, _isHorizental);
-                break;
+                    gameManager.plusScore(ScoreEvent.CONSTRUTION_BRICK);
+                    break;
+            }
         }
+            
         gameManager.ConstructionCount += 1;
     }
 
@@ -273,6 +277,7 @@ public class Pig : MonoBehaviour
         {
             nowLookTile.changeState(WallType.FIRE, _isHorizental);
             gameManager.FireCount += 1;
+            gameManager.plusScore(ScoreEvent.FIRE);
         }
     }
 
