@@ -13,7 +13,7 @@ public class GameManager : Singleton<GameManager>
 
     private int fireCount = 0; // 방화 횟수(방화)
     private int dressUpCount = 0; // 늑대한테 옷 입힌 횟수(절도)
-    private int destroyCount = 0; // 벽 무너뜨린 횟수(특수폭행)
+    private int attackCount = 0; // 벽 무너뜨린 횟수(특수폭행)
     private int constructionCount = 0; // 건설 횟수(불법건축)
 
     private float aliveTime = 0;
@@ -52,15 +52,19 @@ public class GameManager : Singleton<GameManager>
         {
             case ScoreEvent.STUN_STRAW:
                 plusScore(30);
+                AttackCount += 1;
                 break;
             case ScoreEvent.STUN_WOOD:
                 plusScore(70);
+                AttackCount += 1;
                 break;
             case ScoreEvent.STUN_BRICK:
                 plusScore(150);
+                AttackCount += 1;
                 break;
             case ScoreEvent.DRESSUP:
-                plusScore(300);
+                DressUpCount += 1;
+                plusScore(180);
                 break;
             case ScoreEvent.CONSTRUTION_STRAW:
                 plusScore(2);
@@ -96,7 +100,7 @@ public class GameManager : Singleton<GameManager>
         {
             return GameEnding.MEAT;
         }
-        else if (fireCount > 0 || constructionCount > 0 || destroyCount > 0 || dressUpCount > 0)
+        else if (fireCount > 0 || constructionCount > 0 || attackCount > 0 || dressUpCount > 0)
         {
             return GameEnding.ARREST;
         }
@@ -129,9 +133,9 @@ public class GameManager : Singleton<GameManager>
         get { return constructionCount; }
         set { constructionCount = value; }
     }
-    public int DestroyCount {
-        get { return destroyCount; }
-        set { destroyCount = value; }
+    public int AttackCount {
+        get { return attackCount; }
+        set { attackCount = value; }
     }
     public int DressUpCount {
         get { return dressUpCount; }

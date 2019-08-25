@@ -244,7 +244,6 @@ public class Pig : MonoBehaviour
                 if(nowLookTile.WallState == WallType.STRAW 
                     || nowLookTile.WallState == WallType.WOOD || nowLookTile.WallState == WallType.BRICK)
                 {
-                    gameManager.DestroyCount += 1;
                     gameManager.Wolves[0].checkBrokenWall(nowLookTile);
                     nowLookTile.changeState(WallType.NONE);
                 }
@@ -303,8 +302,6 @@ public class Pig : MonoBehaviour
                 if(tileManager.findCurrentNode(gameManager.Wolves[0].transform.position) == nowLookTile)
                 {
                     gameManager.Wolves[0].dressUp();
-                    gameManager.DressUpCount += 1;
-                    gameManager.plusScore(ScoreEvent.DRESSUP);
                 }
             }
         }

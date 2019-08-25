@@ -104,7 +104,7 @@ public class EndingUI : MonoBehaviour
                 break;
             case 2:
                 crimeSubejct += "특수폭행\n";
-                crimeDetail += gameManager.DestroyCount + "회\n";
+                crimeDetail += gameManager.AttackCount + "회\n";
                 break;
             case 3:
                 crimeSubejct += "불법건축\n";
