@@ -9,9 +9,6 @@ public class Wolf : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private FindPath findPath;
 
-    [SerializeField] private float howlingTime;
-    private float howlingCntTime;
-
     private bool isSummon;
     [SerializeField] private float summonWolfTime;
     private float summonWolfCntTime;
@@ -26,7 +23,7 @@ public class Wolf : MonoBehaviour
     //대기 시간
     private float windTimer;
 
-    [SerializeField] private float brokenWallTime;
+    private float brokenWallTime;
     [SerializeField] private float grandmaClothTime;
     private float stunTime;
     private float stunCntTime;
@@ -34,10 +31,12 @@ public class Wolf : MonoBehaviour
     [SerializeField] private Sprite grandma;
     [SerializeField] private Sprite origin;
 
+    [SerializeField] private AudioSource beatSound;
+    [SerializeField] private float soundDistance;
+
     [SerializeField] private GameObject windEffectImage;
 
     [SerializeField] private MapNode currentNode;
-
     public MapNode CurrentNode
     {
         get { return currentNode; }
@@ -64,9 +63,18 @@ public class Wolf : MonoBehaviour
     void Update()
     {
         summonWolfCntTime += Time.deltaTime;
-        howlingCntTime += Time.deltaTime;
         findPathCntTime += Time.deltaTime;
-
+        if(Vector3.Distance(player.transform.position, this.transform.position) <= soundDistance)
+        {
+            beatSound.pitch = 2 - 2 * (Vector3.Distance(player.transform.position, this.transform.position) / soundDistance);
+        }
+        else
+        {
+            beatSound.pitch = 0;
+            
+        }
+        
+        
         if (findPathCntTime > findPathTime)
         {
             findPathCntTime = 0;
