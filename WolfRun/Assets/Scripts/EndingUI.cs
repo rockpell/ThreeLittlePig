@@ -73,7 +73,16 @@ public class EndingUI : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        headText.text = "징역 " + (gameManager.Score / 100) + "년";
+        if(gameManager.Score < 100)
+        {
+            headText.text = "징역 " + decidePunishment(gameManager.Score) + "개월";
+        }
+        else
+        {
+            headText.text = "징역 " + (gameManager.Score / 100) + "년";
+        }
+
+        
 
         yield return new WaitForSeconds(1.0f);
 
@@ -126,6 +135,18 @@ public class EndingUI : MonoBehaviour
 
         buttons[0].SetActive(true);
         buttons[1].SetActive(true);
+    }
+
+    private int decidePunishment(int value)
+    {
+        if (value < 18)
+        {
+            return 1;
+        }
+        else
+        {
+            return value / 9;
+        }
     }
 
     public void restartButton()
