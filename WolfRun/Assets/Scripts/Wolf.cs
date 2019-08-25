@@ -27,6 +27,9 @@ public class Wolf : MonoBehaviour
     [SerializeField] private float grandmaClothTime;
     private float stunTime;
     private float stunCntTime;
+    [SerializeField] private float stunImmuneTime;
+    private float stunImmuneCntTime;
+
     [SerializeField] private Sprite[] stunImage;
     [SerializeField] private Sprite grandma;
     [SerializeField] private Sprite origin;
@@ -50,6 +53,7 @@ public class Wolf : MonoBehaviour
     private bool isWait;
     private bool isWind;
     private bool isStun;
+    private bool isImmune;
 
     void Start()
     {
@@ -75,14 +79,12 @@ public class Wolf : MonoBehaviour
             beatSound.pitch = 0;
             
         }
-        
-        
         if (findPathCntTime > findPathTime)
         {
             findPathCntTime = 0;
             StartCoroutine(findRoute(currentNode));
         }
-        if (isWait == false)//지금이 대기상태인지 나타냄
+        if ((isWait == false) && (isStun == false) && (isWind == false))//지금이 대기상태인지 나타냄
         {
             movePath();
             //현재 타일과 이동 할 타일 비교, 같으면 동작 안함
@@ -316,12 +318,31 @@ public class Wolf : MonoBehaviour
             }
         }
     }
+    IEnumerator stunImmuneTimer()
+    {
+        while(stunImmuneCntTime < stunImmuneTime)
+        {
+            stunImmuneCntTime += Time.deltaTime;
+            yield return null;
+        }
+        isImmune = false;
+        stunImmuneCntTime = 0;
+    }
     public void dressUp()
     {
         //이건 플레이어쪽에서 체크해서 호출됨
-        isWait = true;
-        isStun = true;
-        stun(grandmaClothTime, true);
+        if ((isStun == false) && (isImmune == false))
+        {
+            isImmune = true;
+            isWait = true;
+            isStun = true;
+            GameManager.Instance.plusScore(ScoreEvent.DRESSUP);
+            stun(grandmaClothTime, true);
+        }
+        //일정시간이 지난 후 다시 호출이 가능하게 해야 함
+        //isStun은 움직임 제어때문에 사용 불가
+        //새로운 플래그를 만들면 코드 복잡해짐
+        //
     }
     private void stun(float time, bool isGrandma = false)
     {
@@ -358,6 +379,10 @@ public class Wolf : MonoBehaviour
         stunCntTime = 0;
         stunTime = 0;
         this.GetComponent<SpriteRenderer>().sprite = origin;
+        if(isGrandma == true)
+        {
+            StartCoroutine(stunImmuneTimer());
+        }
         isWait = false;
         isStun = false;
     }

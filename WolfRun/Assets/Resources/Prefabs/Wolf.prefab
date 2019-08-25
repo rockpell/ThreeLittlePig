@@ -103,6 +103,7 @@ MonoBehaviour:
   findPathTime: 2
   windTime: 2
   grandmaClothTime: 10
+  stunImmuneTime: 5
   stunImage:
   - {fileID: 21300000, guid: 58b2e7da6b715574eb5bb67d52a08f31, type: 3}
   - {fileID: 21300000, guid: 3343e9e672a1ade47ac9bd891603e3f4, type: 3}

@@ -17034,6 +17034,11 @@ PrefabInstance:
       propertyPath: soundDistance
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4619732985097838206, guid: 87bf9b34162d5dc448955da7546d9a58,
+        type: 3}
+      propertyPath: stunImmuneTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3689460035397265508, guid: 87bf9b34162d5dc448955da7546d9a58,
         type: 3}
       propertyPath: MinDistance
