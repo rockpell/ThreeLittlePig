@@ -109,7 +109,7 @@ MonoBehaviour:
   grandma: {fileID: 21300000, guid: 90adaeda86337654fb5c35938fc8ba78, type: 3}
   origin: {fileID: 21300000, guid: a4b7ed80c5ffbdb448f71741a9030971, type: 3}
   beatSound: {fileID: 3689460035397265508}
-  soundDistance: 50
+  soundDistance: 10
   windEffectImage: {fileID: 5898951886197440590, guid: 3a98d61d4c980334faf6a5955148b11c,
     type: 3}
   currentNode: {fileID: 0}
@@ -162,7 +162,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 15
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
