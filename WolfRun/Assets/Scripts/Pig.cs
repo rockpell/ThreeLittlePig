@@ -178,17 +178,18 @@ public class Pig : MonoBehaviour
     {
         if (!isActing)
         {
-            Debug.Log("constructionWall");
             // 늑대가 없고 풀타일일 경우 벽 생성가능(아무것도 없을때)
-            if (nowLookTile.WallState == WallType.NONE)
+            if(nowLookTile != null)
             {
-                if(gameManager.Wolves[0].CurrentNode != nowLookTile)
+                if (nowLookTile.WallState == WallType.NONE)
                 {
-                    if (leftCooldown[(int)nowConstructWallType] <= 0)
-                        tryConstructionWall(nowConstructWallType);
+                    if (gameManager.Wolves[0].CurrentNode != nowLookTile)
+                    {
+                        if (leftCooldown[(int)nowConstructWallType] <= 0)
+                            tryConstructionWall(nowConstructWallType);
+                    }
                 }
             }
-
             // 쿨타임 테스트용 코드
             //if (leftCooldown[(int)nowConstructWallType] <= 0)
             //    tryConstructionWall(nowConstructWallType);
@@ -254,9 +255,12 @@ public class Pig : MonoBehaviour
     {
         if (!isActing)
         {
-            if(nowLookTile.WallState == WallType.STRAW || nowLookTile.WallState == WallType.WOOD)
+            if(nowLookTile != null)
             {
-                tryFireWall();
+                if (nowLookTile.WallState == WallType.STRAW || nowLookTile.WallState == WallType.WOOD)
+                {
+                    tryFireWall();
+                }
             }
         }
     }
