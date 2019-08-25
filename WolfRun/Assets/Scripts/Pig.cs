@@ -136,7 +136,8 @@ public class Pig : MonoBehaviour
 
         if(fireResistance <= 0)
         {
-            gameManager.gameEnd();
+            gameManager.Wolves[0].soundEnd();
+            dead();
         }
     }
 

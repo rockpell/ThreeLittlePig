@@ -95,12 +95,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c5b4d82e6e23524fbc50b9027c8b4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1.5
+  speed: 4
   rotationSpeed: 10
   findPath: {fileID: 2329085119081600302}
   summonWolfTime: 20
   summon: {fileID: 65830257852796487, guid: 04e75e03dce88664cba73ffcd81661d9, type: 3}
-  findPathTime: 5
+  findPathTime: 2
   windTime: 2
   grandmaClothTime: 10
   stunImage:
