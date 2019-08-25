@@ -12,6 +12,9 @@ public class EndingUI : MonoBehaviour
 
     [SerializeField] private GameObject[] buttons;
 
+    [SerializeField] private Image endingImage;
+    [SerializeField] private Sprite[] endingSprite;
+
     private string crimeSubejct;
     private string crimeDetail;
 
@@ -43,12 +46,15 @@ public class EndingUI : MonoBehaviour
         switch (gameEnding)
         {
             case GameEnding.THEFT:
+                endingImage.sprite = endingSprite[0];
                 StartCoroutine(theftSequence());
                 break;
             case GameEnding.ARREST:
+                endingImage.sprite = endingSprite[0];
                 StartCoroutine(arrestSequence());
                 break;
             case GameEnding.MEAT:
+                endingImage.sprite = endingSprite[1];
                 StartCoroutine(meatSequence());
                 break;
         }

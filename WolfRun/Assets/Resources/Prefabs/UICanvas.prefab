@@ -544,6 +544,7 @@ GameObject:
   - component: {fileID: 769368624417323294}
   - component: {fileID: 1810752071385208280}
   - component: {fileID: 2864128105994535414}
+  - component: {fileID: 6456577365322963224}
   m_Layer: 5
   m_Name: BodyText1
   m_TagString: Untagged
@@ -612,6 +613,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1.5
   m_Text: "\uBC29\uD654\n\uC808\uB3C4\n\uD2B9\uC218\uD3ED\uD589\n\uBD88\uBC95\uAC74\uCD95"
+--- !u!114 &6456577365322963224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2384623195540190093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 2, y: 2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &2396097457069069247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1781,6 +1797,10 @@ MonoBehaviour:
   buttons:
   - {fileID: 1264212065569035980}
   - {fileID: 6840837972198595231}
+  endingImage: {fileID: 1784879054650024077}
+  endingSprite:
+  - {fileID: 21300000, guid: 9de431d72476ff643889e03302db376c, type: 3}
+  - {fileID: 21300000, guid: b97fbcffe0f09c24993a9d3901110728, type: 3}
 --- !u!1 &6188924660070135766
 GameObject:
   m_ObjectHideFlags: 0
@@ -1923,14 +1943,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 9de431d72476ff643889e03302db376c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2235,6 +2255,7 @@ GameObject:
   - component: {fileID: 2857805124321185793}
   - component: {fileID: 2244753955098167965}
   - component: {fileID: 6177697054398345363}
+  - component: {fileID: 8007575267081735013}
   m_Layer: 5
   m_Name: BodyText2
   m_TagString: Untagged
@@ -2303,6 +2324,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1.5
   m_Text: "1\uD68C\n1\uD68C\n1\uD68C\n1\uD68C"
+--- !u!114 &8007575267081735013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6944255304282633496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 2, y: 2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7015066150230855380
 GameObject:
   m_ObjectHideFlags: 0
@@ -2314,6 +2350,7 @@ GameObject:
   - component: {fileID: 7917522586087075194}
   - component: {fileID: 7610585170785345322}
   - component: {fileID: 975712414550339699}
+  - component: {fileID: 1837947462947298482}
   m_Layer: 5
   m_Name: HeadText
   m_TagString: Untagged
@@ -2382,6 +2419,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uC9D5\uC5ED ???\uB144"
+--- !u!114 &1837947462947298482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7015066150230855380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 2, y: 2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7306026876487555323
 GameObject:
   m_ObjectHideFlags: 0
