@@ -411,11 +411,13 @@ public class Wolf : MonoBehaviour
             {
                 GameManager.Instance.Player.dead();
                 beatSound.Stop();
+                this.gameObject.SetActive(false);
             }
         }
     }
     public void soundEnd()
     {
         beatSound.Stop();
+        this.gameObject.SetActive(false);
     }
 }
