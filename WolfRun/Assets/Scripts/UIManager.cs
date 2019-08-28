@@ -78,11 +78,6 @@ public class UIManager : Singleton<UIManager>
         {
             actingGauage.fillAmount = gameManager.Player.getLeftActGuage();
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            showEnding();
-        }
     }
 
     public void selectWallTypeButton(int index)

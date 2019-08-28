@@ -37,6 +37,10 @@ public class InputManager : MonoBehaviour
         {
             nowPlayer.NowConstructWallType = WallType.BRICK;
         }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit(0);
+        }
 
         if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) // 마우스가 UI 위에 없을때만
         {
